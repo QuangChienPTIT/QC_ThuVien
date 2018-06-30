@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ThuVien</string>
+    <string name="log_in">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="input_username">Email</string>
+    <string name="input_password">Password</string>
+</resources>

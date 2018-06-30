@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "520287739052",
+    "firebase_url": "https://qcthuvien.firebaseio.com",
+    "project_id": "qcthuvien",
+    "storage_bucket": "qcthuvien.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520287739052:android:806fd989e7b8b8cf",
+        "android_client_info": {
+          "package_name": "com.example.higo.thuvien"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520287739052-ate5ok8ves5998f20f8kr10q99uv7jvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.higo.thuvien",
+            "certificate_hash": "f43d1fd10ceed40298afe5263c1a432e2e84d49a"
+          }
+        },
+        {
+          "client_id": "520287739052-cvmr74ho7b92fa899o88o81g4gggg1nn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPuEgHFinyjpwOLIlVf4P322lE-a7j-MY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520287739052-cvmr74ho7b92fa899o88o81g4gggg1nn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
