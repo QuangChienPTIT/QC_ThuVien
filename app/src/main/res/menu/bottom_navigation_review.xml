@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_like"
+        android:enabled="true"
+        android:icon="@drawable/like_off"
+        android:title="Yêu thích" />
+    <item
+        android:id="@+id/nav_muon"
+        android:enabled="true"
+        android:title="Mượn Sách"
+        />
+    <item
+        android:id="@+id/nav_theodoi"
+        android:enabled="true"
+        android:icon="@drawable/follow_off"
+        android:title="Theo dõi" />
+</menu>

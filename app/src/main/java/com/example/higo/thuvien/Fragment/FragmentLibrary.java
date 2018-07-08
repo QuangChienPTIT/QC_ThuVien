@@ -9,13 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.higo.thuvien.Adapter.RecyclerViewAdapter;
 import com.example.higo.thuvien.DAO.BookDAO;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,8 +27,7 @@ public class FragmentLibrary extends Fragment  {
 
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mRecyclerViewAdapter;
-    List<Book> data;
-    BookDAO bookDAO;
+    List<Book> listBook;
 
     @Nullable
     @Override
@@ -38,23 +35,25 @@ public class FragmentLibrary extends Fragment  {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_library,container,false);
         mRecyclerView = view.findViewById(R.id.recycleListBook);
-        data = new ArrayList<>();
-        mRecyclerViewAdapter = new RecyclerViewAdapter(data);
+        listBook = new ArrayList<>();
+
+        mRecyclerViewAdapter = new RecyclerViewAdapter(listBook);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerViewAdapter.notifyDataSetChanged();
-        //Query bookRoot = new BookDAO().listBook();
-        Query bookRoot =  new BookDAO().searchByName("Harry Potter và hòn đá phù thủy");
+        Book book = new Book();
+//        book = new BookDAO().searchByName2("Harry Potter và phòng chứa bí mật");
+        final Query bookRoot = new BookDAO().getAllBook();
         bookRoot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot datas:dataSnapshot.getChildren()){
-                    Book book = datas.getValue(Book.class);
-                    Log.e("bookname",book.getBookName());
-                    data.add(book);
-                    Log.e("Key book",datas.getKey().toString());
+                listBook.clear();
+                for (DataSnapshot data:dataSnapshot.getChildren()){
+                    Book book = data.getValue(Book.class);
+                    book.setId(data.getKey().toString());
+                    listBook.add(book);
                 }
                 mRecyclerViewAdapter.notifyDataSetChanged();
             }
@@ -66,7 +65,35 @@ public class FragmentLibrary extends Fragment  {
         });
 
 
+
         return view;
+    }
+
+    private void thiNghiem() {
+        Query query = FirebaseDatabase.getInstance().getReference().child("Book").child("book001").child("type");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot datas:dataSnapshot.getChildren()){
+                    FirebaseDatabase.getInstance().getReference().child("Type").child(datas.getKey().toString()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.e("Type name ",dataSnapshot.child("name").getValue().toString());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

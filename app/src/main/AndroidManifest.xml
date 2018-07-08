@@ -20,6 +20,14 @@
 
         </activity>
         <activity android:name=".Activity.SignUpActivity"></activity>
+        <activity android:name=".Activity.ReviewActivity"></activity>
+        <activity android:name=".Activity.TestActivity">
+
+        </activity>
+        <activity android:name=".Activity.CommentActivity"></activity>
+        <activity android:name=".Activity.BookTypeActivity">
+
+        </activity>
     </application>
 
 </manifest>

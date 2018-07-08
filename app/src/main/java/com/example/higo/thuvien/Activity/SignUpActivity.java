@@ -76,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     FirebaseUser mUser = mAuth.getCurrentUser();
                                     User user = new User(mUser.getUid(),mUser.getEmail());
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                    DatabaseReference userRoot = database.getReference("User").child(user.getUserID());
+                                    DatabaseReference userRoot = database.getReference("User");
                                     userRoot.setValue(user);
                                     Toast.makeText(SignUpActivity.this,"Đăng kí thành công",Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

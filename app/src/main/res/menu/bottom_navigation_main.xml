@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/nav_tusach"
+        android:enabled="true"
+        android:icon="@drawable/tb_book_case_filled"
+        android:title="Tủ sách"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+    <item android:id="@+id/nav_thuvien"
+        android:enabled="true"
+        android:icon="@drawable/tb_library_filled"
+        android:title="Thư viện"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+    <item android:id="@+id/nav_rank"
+        android:enabled="true"
+        android:icon="@drawable/tb_general_filled"
+        android:title="Xếp hạng"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item android:id="@+id/nav_forum"
+        android:enabled="true"
+        android:icon="@drawable/tb_wall_filled"
+        android:title="Tường"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item android:id="@+id/nav_account"
+        android:enabled="true"
+        android:icon="@drawable/tb_account_filled"
+        android:title="Tài khoản"
+        app:showAsAction="ifRoom">
+    </item>
+</menu>

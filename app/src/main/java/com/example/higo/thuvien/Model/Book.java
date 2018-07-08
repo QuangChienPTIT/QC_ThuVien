@@ -1,11 +1,11 @@
 package com.example.higo.thuvien.Model;
 
 public class Book {
-    private String bookName;
-    private String imgBookURL;
-    private String idBook;
+    private String name;
+    private String imgURL;
+    private String id;
     private String idAuthor;
-    private String idType;
+    private String type;
     private String description;
     private int slTong;
     private int slConLai;
@@ -13,36 +13,44 @@ public class Book {
 
     }
 
-    public Book(String bookName, String imgBookURL, String idBook, String idAuthor, String idType, String description, int slTong, int slConLai) {
-        this.bookName = bookName;
-        this.imgBookURL = imgBookURL;
-        this.idBook = idBook;
+    public Book(String name, String imgURL, String id, String idAuthor, String type, String description, int slTong, int slConLai) {
+        this.name = name;
+        this.imgURL = imgURL;
+        this.id = id;
         this.idAuthor = idAuthor;
-        this.idType = idType;
         this.description = description;
         this.slTong = slTong;
         this.slConLai = slConLai;
     }
 
-    public Book(String bookName, String imgURL) {
-        this.bookName = bookName;
-        this.imgBookURL = imgURL;
+    public Book(String name, String imgURL) {
+        this.name = name;
+        this.imgURL = imgURL;
     }
 
-    public String getImgBookURL() {
-        return imgBookURL;
+
+    public String getName() {
+        return name;
     }
 
-    public void setImgBookURL(String imgBookURL) {
-        this.imgBookURL = imgBookURL;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getIdBook() {
-        return idBook;
+    public String getImgURL() {
+        return imgURL;
     }
 
-    public void setIdBook(String idBook) {
-        this.idBook = idBook;
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIdAuthor() {
@@ -51,14 +59,6 @@ public class Book {
 
     public void setIdAuthor(String idAuthor) {
         this.idAuthor = idAuthor;
-    }
-
-    public String getIdType() {
-        return idType;
-    }
-
-    public void setIdType(String idType) {
-        this.idType = idType;
     }
 
     public String getDescription() {
@@ -84,24 +84,4 @@ public class Book {
     public void setSlConLai(int slConLai) {
         this.slConLai = slConLai;
     }
-
-    public String getImgURL() {
-        return imgBookURL;
-    }
-
-    public void setImgURL(String imgURL) {
-        this.imgBookURL = imgURL;
-    }
-
-    public String getBookName() {
-        return bookName;
-    }
-
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
-    }
-
-
-
-
 }
