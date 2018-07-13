@@ -21,6 +21,7 @@ public class BookDAO {
         return rootBookID;
     }
 
+
     public Query listBookByidType(String idType){
         Query query = root.child("TypeBook").child(idType);
         return query;
@@ -41,6 +42,11 @@ public class BookDAO {
 
             }
         });
+    }
+
+    public Query soLuongSachConLai(String idBook){
+        Query query = FirebaseDatabase.getInstance().getReference().child("QuyenSach").orderByChild("idBook").equalTo(idBook);
+        return query;
     }
 
 

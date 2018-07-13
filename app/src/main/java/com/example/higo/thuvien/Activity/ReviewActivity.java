@@ -16,9 +16,10 @@ import android.widget.Toolbar;
 import com.example.higo.thuvien.DAO.AuthorDAO;
 import com.example.higo.thuvien.DAO.BookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
-import com.example.higo.thuvien.DAO.TypeBookDAO;
+import com.example.higo.thuvien.DAO.TheLoaiDAO;
 import com.example.higo.thuvien.Model.Author;
 import com.example.higo.thuvien.Model.Book;
+import com.example.higo.thuvien.Model.QuyenSach;
 import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.R;
@@ -47,6 +48,7 @@ public class ReviewActivity extends AppCompatActivity {
     private Button btnMuonSach;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Button btnComment;
+    private BookDAO bookDAO = new BookDAO();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +59,28 @@ public class ReviewActivity extends AppCompatActivity {
         addEvents();
 
     }
+    private void addControls() {
+        Intent intent = getIntent();
+        idBook = intent.getStringExtra("idBook");
+        txtBookName = findViewById(R.id.txtBookName);
+        txtTacGia = findViewById(R.id.txtTacGia);
+        txtTheLoai = findViewById(R.id.txtTheLoai);
+        txtSoLuong = findViewById(R.id.txtSoLuong);
+        txtDescription = findViewById(R.id.txtDescription);
+        imgReviewBook = findViewById(R.id.imgReviewBook);
+        btnMuonSach = findViewById(R.id.btnMuonSach);
+        btnComment = findViewById(R.id.btnComment);
+        collapsingToolbarLayout = findViewById(R.id.CollapsingToolbarLayout) ;
+        kiemTraSach();//Kiểm tra sách đã được đăng kí mượn hay chưa
+    }
 
     private void addEvents() {
         btnMuonSach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(user !=null){
-                    new SachMuonDAO().insert(idBook);
+                    
+                    new SachMuonDAO().dangKyMuon(idBook);
                     Toast.makeText(ReviewActivity.this,"Đăng ký mượn sách thành công",Toast.LENGTH_LONG).show();
                 }
                 else Toast.makeText(ReviewActivity.this,"Bạn phải đăng nhập để sử dụng chức năng này",Toast.LENGTH_LONG).show();
@@ -91,21 +108,9 @@ public class ReviewActivity extends AppCompatActivity {
                     txtBookName.setText(book.getName());
                     collapsingToolbarLayout.setTitle(book.getName());
                     txtDescription.setText(book.getDescription());
-                    txtSoLuong.setText("Số lương : "+ book.getSlConLai());
+                    //txtSoLuong.setText("Số lương : "+ book.getSlConLai());
                     //txtTheLoai.setText("Thể loại : " + book.getType());
                     Picasso.get().load(book.getImgURL().toString()).into(imgReviewBook);
-                    new AuthorDAO().searchByID(book.getIdAuthor()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String s =  dataSnapshot.getValue(Author.class).getName();
-                            txtTacGia.setText("Tác giả : "+s);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
 
             }
             @Override
@@ -116,27 +121,26 @@ public class ReviewActivity extends AppCompatActivity {
 
         //set TypeBook
 
-        new TypeBookDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
+        setTxtTheLoai(idBook);
+        setTxtTacGia(idBook);
+        setTxtSoLuong(idBook);
+    }
+
+    private void setTxtSoLuong(String idBook) {
+        bookDAO.soLuongSachConLai(idBook).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtTheLoai.setText("");
-                for(DataSnapshot data:dataSnapshot.getChildren()){
-                    new TypeBookDAO().searchTypeByidType(data.getKey()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String s = txtTheLoai.getText().toString();
-                            if(TextUtils.isEmpty(s))
-                                txtTheLoai.setText(dataSnapshot.getValue(TheLoai.class).getName());
-                            else
-                                txtTheLoai.setText(s + " , "+dataSnapshot.getValue(TheLoai.class).getName());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    //txtSoLuong.setText("Số Lượng : "+dataSnapshot.getChildrenCount());
+                    int soLuong=0;
+                    for(DataSnapshot data:dataSnapshot.getChildren()){
+                        QuyenSach quyenSach = data.getValue(QuyenSach.class);
+                        if(quyenSach.getTinhTrang()!=3&&!quyenSach.isDangMuon()){
+                            soLuong++;
 
                         }
-                    });
-                }
+                        txtSoLuong.setText("Số Lượng : "+ soLuong);
+                    }
+
             }
 
             @Override
@@ -144,39 +148,86 @@ public class ReviewActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
-    private void addControls() {
-        Intent intent = getIntent();
-        idBook = intent.getStringExtra("idBook");
-        txtBookName = findViewById(R.id.txtBookName);
-        txtTacGia = findViewById(R.id.txtTacGia);
-        txtTheLoai = findViewById(R.id.txtTheLoai);
-        txtSoLuong = findViewById(R.id.txtSoLuong);
-        txtDescription = findViewById(R.id.txtDescription);
-        imgReviewBook = findViewById(R.id.imgReviewBook);
-        btnMuonSach = findViewById(R.id.btnMuonSach);
-        btnComment = findViewById(R.id.btnComment);
-        collapsingToolbarLayout = findViewById(R.id.CollapsingToolbarLayout) ;
-        kiemTraSach();//Kiểm tra sách đã được đăng kí mượn hay chưa
+    private void setTxtTheLoai(String idBook) {new TheLoaiDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            txtTheLoai.setText("");
+            for(DataSnapshot data:dataSnapshot.getChildren()){
+                new TheLoaiDAO().searchTypeByidType(data.getKey()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String s = txtTheLoai.getText().toString();
+                        if(TextUtils.isEmpty(s))
+                            txtTheLoai.setText(dataSnapshot.getValue(TheLoai.class).getName());
+                        else
+                            txtTheLoai.setText(s + " , "+dataSnapshot.getValue(TheLoai.class).getName());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    });
+    }
+
+    private void setTxtTacGia(String idBook) {
+        new AuthorDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            txtTacGia.setText("");
+            for(DataSnapshot data:dataSnapshot.getChildren()){
+                new AuthorDAO().searchTacGiaById(data.getKey()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String s = txtTacGia.getText().toString();
+                        if(TextUtils.isEmpty(s))
+                            txtTacGia.setText(dataSnapshot.getValue(Author.class).getName());
+                        else
+                            txtTacGia.setText(s + " , "+dataSnapshot.getValue(Author.class).getName());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    });
     }
 
     private void kiemTraSach() {
         DatabaseReference rootSachMuon = FirebaseDatabase.getInstance().getReference().child("SachMuon");
-        rootSachMuon.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount()>2){
-                    btnMuonSach.setText("KHÔNG THỂ MUỌN THÊM");
-                    btnMuonSach.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        rootSachMuon.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.getChildrenCount()>2){
+//                    btnMuonSach.setText("KHÔNG THỂ MUỌN THÊM");
+//                    btnMuonSach.setEnabled(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         rootSachMuon.child(user.getUid()).orderByChild("idBook").equalTo(idBook)
                 .addChildEventListener(new ChildEventListener() {

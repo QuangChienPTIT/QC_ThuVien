@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class BookTypeActivity extends AppCompatActivity {
     private TabLayout tabType;
     private ViewPager viewPager;
@@ -39,6 +40,7 @@ public class BookTypeActivity extends AppCompatActivity {
     }
 
     private void setupViewPaper() {
+
          adapter = new ViewPagerAdapter(getSupportFragmentManager());
          //adapter.addFragment(new OneFragment(),"Dac biet");
          //viewPager.setAdapter(adapter);
@@ -47,7 +49,6 @@ public class BookTypeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data:dataSnapshot.getChildren()) {
                     adapter.addFragment(new FragmentBookType(data.getKey().toString()), data.getValue(TheLoai.class).getName());
-                    Log.e("Keeeyyy1",data.getKey().toString());
                 }
                 viewPager.setAdapter(adapter);
             }

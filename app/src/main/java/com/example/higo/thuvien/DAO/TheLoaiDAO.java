@@ -3,8 +3,7 @@ package com.example.higo.thuvien.DAO;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class TypeBookDAO {
-
+public class TheLoaiDAO {
     public Query searchByIdBook(String idBook){
         Query query = FirebaseDatabase.getInstance().getReference().child("TypeBook").orderByChild(idBook).equalTo(true);
         return query;
@@ -15,8 +14,5 @@ public class TypeBookDAO {
         return query;
     }
 
-    public Query listBookByidType(String idType){
-        Query query = FirebaseDatabase.getInstance().getReference().child("TypeBook").child(idType);
-        return query;
-    }
+
 }

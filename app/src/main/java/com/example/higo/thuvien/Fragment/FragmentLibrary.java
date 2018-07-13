@@ -1,8 +1,8 @@
 package com.example.higo.thuvien.Fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentLibrary extends Fragment  {
+public class FragmentLibrary extends Fragment {
 
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mRecyclerViewAdapter;
@@ -67,33 +67,6 @@ public class FragmentLibrary extends Fragment  {
 
 
         return view;
-    }
-
-    private void thiNghiem() {
-        Query query = FirebaseDatabase.getInstance().getReference().child("Book").child("book001").child("type");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot datas:dataSnapshot.getChildren()){
-                    FirebaseDatabase.getInstance().getReference().child("Type").child(datas.getKey().toString()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.e("Type name ",dataSnapshot.child("name").getValue().toString());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
 }

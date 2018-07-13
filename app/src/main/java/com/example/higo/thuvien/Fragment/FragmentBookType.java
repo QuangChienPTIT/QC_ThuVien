@@ -18,7 +18,6 @@ import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.Adapter.GridAdapterBookType;
 import com.example.higo.thuvien.Adapter.RecyclerViewAdapter;
 import com.example.higo.thuvien.DAO.BookDAO;
-import com.example.higo.thuvien.DAO.TypeBookDAO;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.R;
 import com.google.firebase.database.DataSnapshot;
@@ -47,8 +46,8 @@ public class FragmentBookType extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_booktype,container,false);
         addControls(view);
-
-        new TypeBookDAO().listBookByidType(idType).addValueEventListener(new ValueEventListener() {
+        //add danh sach sach theo idType
+        new BookDAO().listBookByidType(idType).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listBook.clear();

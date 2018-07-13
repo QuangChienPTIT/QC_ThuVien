@@ -6,8 +6,26 @@ public class SachMuon {
     private String idBook;
     private String idUser;
     private String ngayMuon;
+    private String ngayDangKy;
+    private String ngayTra;
     private String id;
     public SachMuon() {
+    }
+
+    public String getNgayDangKy() {
+        return ngayDangKy;
+    }
+
+    public void setNgayDangKy(String ngayDangKy) {
+        this.ngayDangKy = ngayDangKy;
+    }
+
+    public String getNgayTra() {
+        return ngayTra;
+    }
+
+    public void setNgayTra(String ngayTra) {
+        this.ngayTra = ngayTra;
     }
 
     public String getId() {

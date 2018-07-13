@@ -12,4 +12,14 @@ public class AuthorDAO {
         Query query = root.child("Author").child(id);
         return query;
     }
+
+    public Query searchByIdBook(String idBook){
+        Query query = FirebaseDatabase.getInstance().getReference().child("AuthorBook").orderByChild(idBook).equalTo(true);
+        return query;
+    }
+
+    public Query searchTacGiaById(String idAuthor){
+        Query query = FirebaseDatabase.getInstance().getReference().child("Author").child(idAuthor);
+        return query;
+    }
 }

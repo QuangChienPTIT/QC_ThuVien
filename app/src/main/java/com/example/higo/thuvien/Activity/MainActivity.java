@@ -1,18 +1,15 @@
 package com.example.higo.thuvien.Activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-
-import com.example.higo.thuvien.Fragment.FragmentAccount;
 import com.example.higo.thuvien.Fragment.FragmentBookshelf;
-import com.example.higo.thuvien.Fragment.FragmentForum;
 import com.example.higo.thuvien.Fragment.FragmentLibrary;
 import com.example.higo.thuvien.Fragment.FragmentRank;
 import com.example.higo.thuvien.Fragment.FragmentSachMuon;
@@ -74,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void switchFragment(Fragment fragment) {
-        fragmentManager = getFragmentManager();
+    private void switchFragment(android.support.v4.app.Fragment fragment) {
+        fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.mainFragment, fragment);
         transaction.commit();

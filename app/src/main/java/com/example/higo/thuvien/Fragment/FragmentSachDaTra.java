@@ -1,7 +1,6 @@
 package com.example.higo.thuvien.Fragment;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,16 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.higo.thuvien.Adapter.SachMuonAdapter;
+import com.example.higo.thuvien.DAO.BookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
 import com.example.higo.thuvien.Model.SachMuon;
 import com.example.higo.thuvien.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,10 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
-public class FragmentSachMuon extends Fragment {
-
+public class FragmentSachDaTra extends Fragment {
     ListView lvSachMuon;
     ArrayList<SachMuon> listSachMuon;
     SachMuonAdapter sachMuonAdapter;
@@ -50,8 +46,7 @@ public class FragmentSachMuon extends Fragment {
         lvSachMuon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SachMuon sachMuon = listSachMuon.get(i);
-                new SachMuonDAO().xacNhanTra(sachMuon);
+
             }
         });
     }
@@ -67,13 +62,13 @@ public class FragmentSachMuon extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listSachMuon.clear();
 
-                    for(DataSnapshot data:dataSnapshot.getChildren()){
-                        if(data.child("ngayTra").getValue()==null&&data.child("ngayMuon").getValue()!=null){
-                            SachMuon sachMuon = data.getValue(SachMuon.class);
-                            sachMuon.setIdUser(data.getRef().getParent().getKey());
-                            listSachMuon.add(sachMuon);
-                        }
+                for(DataSnapshot data:dataSnapshot.getChildren()){
+                    if(data.child("ngayTra").getValue()!=null){
+                        SachMuon sachMuon = data.getValue(SachMuon.class);
+                        sachMuon.setIdUser(data.getRef().getParent().getKey());
+                        listSachMuon.add(sachMuon);
                     }
+                }
 
                 sapXepSachMuon(listSachMuon);
                 sachMuonAdapter.notifyDataSetChanged();
@@ -90,10 +85,12 @@ public class FragmentSachMuon extends Fragment {
     private void sapXepSachMuon(ArrayList<SachMuon> listSachMuon) {
         Collections.sort(listSachMuon,new Comparator<SachMuon>() {
             public int compare(SachMuon o1, SachMuon o2) {
-                return o1.getNgayMuon().toString().compareTo(o2.getNgayMuon().toString());
+                return o1.getNgayTra().toString().compareTo(o2.getNgayTra().toString());
             }
         });
         //Collections.reverse(listSachMuon);
     }
 
+
 }
+

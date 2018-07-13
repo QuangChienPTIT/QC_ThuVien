@@ -47,7 +47,6 @@
                     android:layout_weight="1">
 
 
-
                     <TextView
                         android:id="@+id/txtBookName"
                         android:layout_width="match_parent"
@@ -61,36 +60,45 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/txtBookName"
+                        android:layout_alignTop="@+id/txtTacGia"
+                        android:text="Tác giả :" />
+
+                    <TextView
                         android:id="@+id/txtTacGia"
-                        android:layout_width="208dp"
-                        android:layout_height="20dp"
+                        android:layout_width="153dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="75dp"
-                        android:text="Tác giả"
-                        android:textColor="#FFF"
-                        android:fontFamily="sans-serif-light"/>
+                        android:layout_marginEnd="11dp"
+                        android:layout_marginTop="70dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Quang Chiến"
+                        android:textColor="#FFF" />
+
                     <TextView
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_alignStart="@+id/txtBookName"
                         android:layout_centerVertical="true"
+                        android:fontFamily="sans-serif-light"
                         android:text="Thể loại :"
-                        android:textColor="#FFF"
-                        android:fontFamily="sans-serif-light"/>
+                        android:textColor="#FFF" />
 
                     <TextView
                         android:id="@+id/txtTheLoai"
-                        android:layout_width="155dp"
+                        android:layout_width="161dp"
                         android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/txtTacGia"
                         android:layout_alignTop="@+id/textView"
                         android:layout_marginEnd="-7dp"
-                        android:text="Truyện tranh Tiểu thuyết"
+                        android:fontFamily="sans-serif-light"
                         android:textAlignment="textStart"
-                        android:textColor="#FFF"
-                        android:fontFamily="sans-serif-light"/>
+                        android:textColor="#FFF" />
 
                     <TextView
                         android:id="@+id/txtSoLuong"
@@ -99,9 +107,9 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="109dp"
+                        android:fontFamily="sans-serif-light"
                         android:text="Trạng thái : "
-                        android:textColor="#FFF"
-                        android:fontFamily="sans-serif-light"/>
+                        android:textColor="#FFF" />
 
                 </RelativeLayout>
             </LinearLayout>

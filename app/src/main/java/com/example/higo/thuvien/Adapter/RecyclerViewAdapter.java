@@ -3,6 +3,7 @@ package com.example.higo.thuvien.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.DAO.AuthorDAO;
 import com.example.higo.thuvien.Model.Author;
 import com.example.higo.thuvien.Model.Book;
+import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,12 +52,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         else
             holder.txtSoLuongCon.setText("Tình trạng : Hết sách");
         Picasso.get().load(book.getImgURL().toString()).into(holder.imgBook);
-        String idAuthor = book.getIdAuthor();
-        new AuthorDAO().searchByID(idAuthor).addValueEventListener(new ValueEventListener() {
+//        String idAuthor = book.getIdAuthor();
+//        new AuthorDAO().searchByID(idAuthor).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                String s =  dataSnapshot.getValue(Author.class).getName();
+//                holder.txtAuthorName.setText("Tác giả : "+s);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        new AuthorDAO().searchByIdBook(book.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String s =  dataSnapshot.getValue(Author.class).getName();
-                holder.txtAuthorName.setText("Tác giả : "+s);
+                holder.txtAuthorName.setText("");
+                for(DataSnapshot data:dataSnapshot.getChildren()){
+                    new AuthorDAO().searchTacGiaById(data.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String s = holder.txtAuthorName.getText().toString();
+                            if(TextUtils.isEmpty(s))
+                                holder.txtAuthorName.setText(dataSnapshot.getValue(Author.class).getName());
+                            else
+                                holder.txtAuthorName.setText(s + " , "+dataSnapshot.getValue(Author.class).getName());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
 
             @Override
