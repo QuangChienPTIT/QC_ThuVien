@@ -1,25 +1,34 @@
 package com.example.higo.thuvien.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.higo.thuvien.DAO.AuthorDAO;
 import com.example.higo.thuvien.DAO.BookDAO;
+import com.example.higo.thuvien.DAO.QuyenSachDAO;
+import com.example.higo.thuvien.DAO.RateBookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
 import com.example.higo.thuvien.DAO.TheLoaiDAO;
 import com.example.higo.thuvien.Model.Author;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.Model.QuyenSach;
+import com.example.higo.thuvien.Model.RateBook;
+import com.example.higo.thuvien.Model.SachMuon;
 import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.R;
@@ -40,15 +49,22 @@ import java.util.Date;
 public class ReviewActivity extends AppCompatActivity {
     private String idBook;
     private TextView txtBookName;
+    private TextView txtQuyenSach;
     private TextView txtTacGia;
     private TextView txtTheLoai;
     private TextView txtSoLuong;
     private TextView txtDescription;
+    private TextView txtRating;
     private ImageView imgReviewBook;
     private Button btnMuonSach;
+    private RatingBar ratingBarReview;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Button btnComment;
+    private Button btnTheoDoi;
     private BookDAO bookDAO = new BookDAO();
+    private SachMuonDAO sachMuonDAO = new SachMuonDAO();
+    private QuyenSachDAO quyenSachDAO = new QuyenSachDAO();
+    private RateBookDAO rateBookDAO = new RateBookDAO();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,36 +79,74 @@ public class ReviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         idBook = intent.getStringExtra("idBook");
         txtBookName = findViewById(R.id.txtBookName);
+        txtQuyenSach = findViewById(R.id.txtQuyenSach);
         txtTacGia = findViewById(R.id.txtTacGia);
         txtTheLoai = findViewById(R.id.txtTheLoai);
         txtSoLuong = findViewById(R.id.txtSoLuong);
         txtDescription = findViewById(R.id.txtDescription);
+        txtRating = findViewById(R.id.txtRating);
         imgReviewBook = findViewById(R.id.imgReviewBook);
         btnMuonSach = findViewById(R.id.btnMuonSach);
         btnComment = findViewById(R.id.btnComment);
+        btnTheoDoi = findViewById(R.id.btnTheoDoi);
+        ratingBarReview = findViewById(R.id.ratingBarReview);
         collapsingToolbarLayout = findViewById(R.id.CollapsingToolbarLayout) ;
-        kiemTraSach();//Kiểm tra sách đã được đăng kí mượn hay chưa
+        kiemTraSach();
+
+        bookDAO.soLuongSachConLai(idBook).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data:dataSnapshot.getChildren()){
+                    QuyenSach quyenSach = data.getValue(QuyenSach.class);
+                    if(quyenSach.getTinhTrang()!=3&&!quyenSach.isDangMuon()){
+                        txtQuyenSach.setText(data.getKey());
+                        break;
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addEvents() {
         btnMuonSach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user !=null){
-                    
-                    new SachMuonDAO().dangKyMuon(idBook);
-                    Toast.makeText(ReviewActivity.this,"Đăng ký mượn sách thành công",Toast.LENGTH_LONG).show();
-                }
-                else Toast.makeText(ReviewActivity.this,"Bạn phải đăng nhập để sử dụng chức năng này",Toast.LENGTH_LONG).show();
+                if (user != null) {
+
+                    new SachMuonDAO().dangKyMuon(txtQuyenSach.getText().toString());
+                    Toast.makeText(ReviewActivity.this, "Đăng ký mượn sách thành công", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(ReviewActivity.this, "Bạn phải đăng nhập để sử dụng chức năng này", Toast.LENGTH_LONG).show();
             }
         });
 
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ReviewActivity.this,CommentActivity.class);
-                intent.putExtra("idBook",idBook);
+                Intent intent = new Intent(ReviewActivity.this, CommentActivity.class);
+                intent.putExtra("idBook", idBook);
                 startActivity(intent);
+            }
+        });
+
+        ratingBarReview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                loadDialogRating();
+                return false;
+            }
+        });
+        btnTheoDoi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadDialogRating();
             }
         });
     }
@@ -108,8 +162,6 @@ public class ReviewActivity extends AppCompatActivity {
                     txtBookName.setText(book.getName());
                     collapsingToolbarLayout.setTitle(book.getName());
                     txtDescription.setText(book.getDescription());
-                    //txtSoLuong.setText("Số lương : "+ book.getSlConLai());
-                    //txtTheLoai.setText("Thể loại : " + book.getType());
                     Picasso.get().load(book.getImgURL().toString()).into(imgReviewBook);
 
             }
@@ -119,18 +171,38 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
-        //set TypeBook
-
         setTxtTheLoai(idBook);
         setTxtTacGia(idBook);
         setTxtSoLuong(idBook);
+        setRatingBarReview(idBook);
+    }
+
+    private void setRatingBarReview(String idBook) {
+        rateBookDAO.getRateByIdBook(idBook).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                float rateCount = 0;
+                for (DataSnapshot data:dataSnapshot.getChildren()){
+                    rateCount = rateCount + data.child("rate").getValue(float.class);
+                }
+                float rate = rateCount / dataSnapshot.getChildrenCount();
+                rate = (float)Math.round(rate*10)/10;
+                ratingBarReview.setRating(rate);
+                txtRating.setText(rate+"");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setTxtSoLuong(String idBook) {
         bookDAO.soLuongSachConLai(idBook).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    //txtSoLuong.setText("Số Lượng : "+dataSnapshot.getChildrenCount());
+
                     int soLuong=0;
                     for(DataSnapshot data:dataSnapshot.getChildren()){
                         QuyenSach quyenSach = data.getValue(QuyenSach.class);
@@ -212,56 +284,59 @@ public class ReviewActivity extends AppCompatActivity {
     });
     }
 
-    private void kiemTraSach() {
-        DatabaseReference rootSachMuon = FirebaseDatabase.getInstance().getReference().child("SachMuon");
-//        rootSachMuon.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.getChildrenCount()>2){
-//                    btnMuonSach.setText("KHÔNG THỂ MUỌN THÊM");
-//                    btnMuonSach.setEnabled(false);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
-        rootSachMuon.child(user.getUid()).orderByChild("idBook").equalTo(idBook)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            if (dataSnapshot.getValue()!=null){
-                                btnMuonSach.setText("SÁCH ĐÃ MƯỢN");
-                                btnMuonSach.setEnabled(false);
-                            }
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        btnMuonSach.setText("MƯỢN SÁCH");
-                        btnMuonSach.setEnabled(true);
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
+    public void kiemTraSach() {
+        demSoSach();
     }
+
+    private void demSoSach() {
+        sachMuonDAO.getListSachMuonByUser(user.getUid()).orderByChild("ngayTra").equalTo(null).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount()>5){
+                    btnMuonSach.setText("KHÔNG THỂ MƯỢN THÊM");
+                    btnMuonSach.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadDialogRating() {
+        final Dialog dialog = new Dialog(ReviewActivity.this);
+        dialog.setContentView(R.layout.layout_rating);
+        final EditText edRating = dialog.findViewById(R.id.edRating);
+        Button btnRating = dialog.findViewById(R.id.btnRating);
+        final TextView txtRating = dialog.findViewById(R.id.txtRating);
+        final RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                if(v>4) txtRating.setText("Rất hay");
+                else if (v>3) txtRating.setText("Hay");
+                else if (v>2) txtRating.setText("Tạm được");
+                else if (v>1) txtRating.setText("Tệ");
+                else if (v>0) txtRating.setText("Rất tệ");
+            }
+        });
+        btnRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RateBook rateBook = new RateBook();
+                rateBook.setIdBook(idBook);
+                rateBook.setIdUser(user.getUid());
+                rateBook.setRate(ratingBar.getRating());
+                rateBook.setContent(edRating.getText().toString());
+                rateBookDAO.insert(rateBook);
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
+
+
 }

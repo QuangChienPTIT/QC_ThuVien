@@ -3,7 +3,7 @@ package com.example.higo.thuvien.Model;
 import java.util.Date;
 
 public class SachMuon {
-    private String idBook;
+    private String idQuyenSach;
     private String idUser;
     private String ngayMuon;
     private String ngayDangKy;
@@ -36,12 +36,12 @@ public class SachMuon {
         this.id = id;
     }
 
-    public String getIdBook() {
-        return idBook;
+    public String getIdQuyenSach() {
+        return idQuyenSach;
     }
 
-    public void setIdBook(String idBook) {
-        this.idBook = idBook;
+    public void setIdQuyenSach(String idQuyenSach) {
+        this.idQuyenSach = idQuyenSach;
     }
 
     public String getIdUser() {

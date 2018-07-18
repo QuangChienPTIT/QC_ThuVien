@@ -22,18 +22,19 @@ public class SachMuonDAO {
     DatabaseReference rootBook = FirebaseDatabase.getInstance().getReference().child("Book");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    QuyenSachDAO quyenSachDAO = new QuyenSachDAO();
 
     public SachMuonDAO() {
     }
 
-    public void dangKyMuon(String idBook){
+    public void dangKyMuon(String idQuyenSach){
         Date toDay = new Date();
         SachMuon sachMuon = new SachMuon();
         sachMuon.setNgayDangKy(dateFormat.format(toDay));
-        sachMuon.setIdBook(idBook);
+        sachMuon.setIdQuyenSach(idQuyenSach);
         sachMuon.setIdUser(user.getUid());
         rootSachMuon.child(user.getUid()).push().setValue(sachMuon);
-        new BookDAO().updateSlConLai(idBook);
+        quyenSachDAO.capNhatQuyenSach(idQuyenSach,true);
 
     }
 
@@ -47,6 +48,7 @@ public class SachMuonDAO {
         Date toDay = new Date();
         sachMuon.setNgayTra(dateFormat.format(toDay));
         update(sachMuon);
+        quyenSachDAO.capNhatQuyenSach(sachMuon.getIdQuyenSach(),false);
     }
 
     public void delete(String idBook){
@@ -54,7 +56,7 @@ public class SachMuonDAO {
     }
 
     public void update(final SachMuon sachMuon){
-        rootSachMuon.child(sachMuon.getIdUser()).orderByChild("idBook").equalTo(sachMuon.getIdBook()).addListenerForSingleValueEvent(new ValueEventListener() {
+        rootSachMuon.child(sachMuon.getIdUser()).orderByChild("idQuyenSach").equalTo(sachMuon.getIdQuyenSach()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data:dataSnapshot.getChildren()){
@@ -70,17 +72,11 @@ public class SachMuonDAO {
 
     }
 
-    public Query searchByBook(String idBook){
-        Query query = rootSachMuon.child(user.getUid()).orderByChild("idBook").equalTo(idBook);
-        return query;
-    }
 
-    public Query getListSachMuon(){
-        Query query = rootSachMuon;
-        return query;
-    }
     public Query getListSachMuonByUser(String idUser){
         Query query = rootSachMuon.child(idUser);
         return query;
+
     }
+
 }

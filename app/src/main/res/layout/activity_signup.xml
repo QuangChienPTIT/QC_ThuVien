@@ -4,46 +4,95 @@
     android:layout_height="match_parent"
     android:background="@drawable/library">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:orientation="vertical">
+        android:layout_marginTop="50dp">
 
-        <EditText
-            android:id="@+id/edEmailSignUp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/white"
-            android:hint="@string/input_username"
-            android:paddingLeft="10dp"
-            android:textColor="@color/black" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edPasswordSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/white"
-            android:hint="@string/input_password"
-            android:inputType="textPassword"
-            android:paddingLeft="10dp"
-            android:textColor="@color/black" />
+            <EditText
+                android:id="@+id/edEmailSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="@string/input_username"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/btnSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="SignUp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+            <EditText
+                android:id="@+id/edPasswordSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="@string/input_password"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/edFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="Họ"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/edLastName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="Tên"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/edPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="Số điện thoại"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/edAddress"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/white"
+                android:hint="Địa chỉ"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btnSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="SignUp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="vertical"></LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

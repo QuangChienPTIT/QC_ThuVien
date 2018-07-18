@@ -7,6 +7,31 @@
     android:orientation="vertical"
     tools:context=".Activity.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarmain"
+        style="@style/Toolbar.TitleText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/background_light"
+        >
+
+        <TextView
+            android:id="@+id/txtTitle"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:text="Tủ sách"
+            android:textSize="18sp"
+            android:typeface="monospace" />
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
     <FrameLayout
         android:id="@+id/mainFragment"
@@ -14,13 +39,19 @@
         android:layout_height="match_parent"
         android:layout_weight="6"></FrameLayout>
 
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp">
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/botton_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_weight="1"
+        app:itemTextColor="@color/colorNameHighlight"
         app:menu="@menu/bottom_navigation_main">
 
     </android.support.design.widget.BottomNavigationView>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

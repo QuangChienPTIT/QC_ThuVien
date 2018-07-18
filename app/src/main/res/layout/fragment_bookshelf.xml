@@ -5,22 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@android:color/background_light"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:title="Tủ sách"
-        style="@style/Toolbar.TitleText"
-        />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -32,16 +17,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:tabGravity="center"
+            app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabTextColor="@color/black" />
+            app:tabTextColor="#BDBDBD"
+            app:tabSelectedTextColor="@color/colorNameHighlight"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpaperBookshelf"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
 
 
     </LinearLayout>

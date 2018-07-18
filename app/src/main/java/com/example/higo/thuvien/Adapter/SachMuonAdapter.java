@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.higo.thuvien.DAO.BookDAO;
+import com.example.higo.thuvien.DAO.QuyenSachDAO;
 import com.example.higo.thuvien.DAO.UserDAO;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.Model.SachMuon;
@@ -51,11 +52,20 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
         final ImageView imgSachMuon = convertView.findViewById(R.id.imgSachMuon);
         TextView txtNgayMuon = convertView.findViewById(R.id.txtNgayMuon);
         SachMuon sachMuon = listSachMuon.get(position);
-        new BookDAO().searchByID(sachMuon.getIdBook().toString()).addValueEventListener(new ValueEventListener() {
+        new QuyenSachDAO().getIdBook(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtTenSach.setText(dataSnapshot.getValue(Book.class).getName().toString());
-                Picasso.get().load(dataSnapshot.getValue(Book.class).getImgURL()).into(imgSachMuon);
+                new BookDAO().searchByID(dataSnapshot.getValue().toString()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        txtTenSach.setText(dataSnapshot.child("name").getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -67,7 +77,7 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
         new UserDAO().searchByID(sachMuon.getIdUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtUserName.setText(dataSnapshot.getValue(User.class).getName());
+                txtUserName.setText(dataSnapshot.getValue(User.class).getEmail());
             }
 
             @Override
@@ -75,8 +85,13 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
 
             }
         });
-
-        txtNgayMuon.setText(sachMuon.getNgayMuon());
+        if(sachMuon.getNgayTra()!=null){
+            txtNgayMuon.setText("Ngày trả : "+sachMuon.getNgayTra());
+        }
+        else if(sachMuon.getNgayMuon()!=null){
+            txtNgayMuon.setText("Ngày mượn : "+sachMuon.getNgayMuon());
+        }
+        else txtNgayMuon.setText("Ngày đăng ký : "+sachMuon.getNgayDangKy());
 
         return convertView;
     }

@@ -75,7 +75,7 @@ public class FragmentSachDangKy extends Fragment {
                     }
                 }
 
-                sapXepSachMuon(listSachMuon);
+                //sapXepSachMuon(listSachMuon);
                 sachMuonAdapter.notifyDataSetChanged();
             }
 

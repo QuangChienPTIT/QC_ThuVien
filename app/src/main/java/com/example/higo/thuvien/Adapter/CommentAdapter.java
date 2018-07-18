@@ -55,7 +55,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         new UserDAO().searchByID(comment.getIdUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtUserComment.setText(dataSnapshot.getValue(User.class).getName());
+                txtUserComment.setText(dataSnapshot.getValue(User.class).getEmail());
                 Picasso.get().load(dataSnapshot.getValue(User.class).getImgURL()).into(imgUserComment);
 
             }

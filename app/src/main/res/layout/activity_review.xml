@@ -48,6 +48,15 @@
 
 
                     <TextView
+                        android:id="@+id/txtQuyenSach"
+                        android:layout_width="147dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
+
+                    <TextView
                         android:id="@+id/txtBookName"
                         android:layout_width="match_parent"
                         android:layout_height="25dp"
@@ -110,6 +119,33 @@
                         android:fontFamily="sans-serif-light"
                         android:text="Trạng thái : "
                         android:textColor="#FFF" />
+
+                    <RatingBar
+                        android:id="@+id/ratingBarReview"
+                        android:layout_width="233dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginBottom="84dp"
+                        android:layout_marginEnd="0dp"
+                        android:isIndicator="true"
+                        android:max="5"
+                        android:rating="3.5"
+                        android:scaleX=".5"
+                        android:scaleY=".5"
+                        android:transformPivotX="0dp"
+                        android:transformPivotY="0dp" />
+
+                    <TextView
+                        android:id="@+id/txtRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginBottom="107dp"
+                        android:layout_marginEnd="84dp"
+                        android:text="4.5"
+                        />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -198,13 +234,15 @@
                 android:background="@color/colorPrimary"
                 android:text="MƯỢN SÁCH"
                 android:layout_weight="1"/>
+
             <Button
+                android:id="@+id/btnTheoDoi"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_weight="1"
                 android:background="@color/white"
-                android:text="THEO DÕI"
-                android:layout_weight="1"/>
+                android:text="THEO DÕI" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </android.support.design.widget.CoordinatorLayout>

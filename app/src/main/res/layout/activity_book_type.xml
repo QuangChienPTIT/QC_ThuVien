@@ -14,14 +14,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            style="@style/Toolbar.TitleText"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/background_light"
+            >
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif"
+                android:text="Thể loại"
+                android:textSize="18sp"
+                android:typeface="monospace" />
+        </android.support.v7.widget.Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
         <android.support.design.widget.TabLayout
             android:id="@+id/tabType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/white"
             app:tabGravity="center"
             app:tabMode="scrollable"
-            app:tabTextColor="#FFFFFF" />
+            app:tabTextColor="#BDBDBD"
+            app:tabSelectedTextColor="@color/colorNameHighlight"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"/>
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpaperBookType"
             android:layout_width="match_parent"
