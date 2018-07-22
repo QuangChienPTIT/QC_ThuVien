@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,12 +18,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText edEmailLogin,edPasswordLogin,edPhoneNumber,edFirstName,edLastName,edAddress;
+    private EditText edEmailSignUp,edPasswordSignUp,edPhoneNumber,edFirstName,edLastName,edAddress;
     private Button btnSignUp;
     private TextView txtSignUp;
     private FirebaseAuth mAuth;
@@ -41,8 +43,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void addControls() {
-        edEmailLogin = findViewById(R.id.edEmailSignUp);
-        edPasswordLogin = findViewById(R.id.edPasswordSignUp);
+        edEmailSignUp = findViewById(R.id.edEmailSignUp);
+        edPasswordSignUp = findViewById(R.id.edPasswordSignUp);
         edAddress = findViewById(R.id.edAddress);
         edFirstName = findViewById(R.id.edFirstName);
         edLastName = findViewById(R.id.edLastName);
@@ -56,8 +58,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()){
             case R.id.btnSignUp:
                 final String email,password,firstName,lastName,address,phoneNumber;
-                email = edEmailLogin.getText().toString();
-                password = edPasswordLogin.getText().toString();
+                email = edEmailSignUp.getText().toString();
+                password = edPasswordSignUp.getText().toString();
                 firstName= edFirstName.getText().toString();
                 lastName = edLastName.getText().toString();
                 address = edAddress.getText().toString();
@@ -81,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     return;
                 }
                 mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(SignUpActivity.this,new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
@@ -103,6 +105,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(SignUpActivity.this,"Đăng kí thất bại",Toast.LENGTH_SHORT).show();
+                                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                                    Log.e("loi",e.getMessage());
+
                                 }
                             }
                         });

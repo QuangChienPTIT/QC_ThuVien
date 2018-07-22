@@ -63,6 +63,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@color/white"
                 android:hint="Số điện thoại"
+                android:inputType="phone"
                 android:paddingLeft="10dp"
                 android:textColor="@color/black" />
 

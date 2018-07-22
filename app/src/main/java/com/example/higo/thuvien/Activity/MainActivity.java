@@ -18,17 +18,23 @@ import com.example.higo.thuvien.Fragment.FragmentLibrary;
 import com.example.higo.thuvien.Fragment.FragmentRank;
 import com.example.higo.thuvien.Fragment.FragmentSachMuon;
 import com.example.higo.thuvien.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     Fragment currentfragment = null;
     FragmentManager fragmentManager;
     FragmentTransaction transaction;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private TextView txtTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(mAuth.getCurrentUser()==null){
+            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }
         addControls();
         addEvents();
     }

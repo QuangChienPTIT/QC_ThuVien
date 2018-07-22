@@ -37,8 +37,5 @@ public class TestActivity extends AppCompatActivity {
     public void thunghiem() {
         QuyenSach quyenSach = new QuyenSach();
         quyenSach.setIdBook("book001");
-        String key=FirebaseDatabase.getInstance().getReference().child("QuyenSach").push().getKey();
-        key="book001"+key;
-        FirebaseDatabase.getInstance().getReference().child("QuyenSach").child(key).setValue(quyenSach);
     }
 }
