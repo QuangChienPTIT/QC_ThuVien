@@ -30,7 +30,7 @@ public class SachMuonDAO {
     public void dangKyMuon(String idQuyenSach){
         Date toDay = new Date();
         SachMuon sachMuon = new SachMuon();
-        sachMuon.setNgayDangKy(dateFormat.format(toDay));
+        sachMuon.setNgayDangKy(toDay.getTime()+"");
         sachMuon.setIdQuyenSach(idQuyenSach);
         sachMuon.setIdUser(user.getUid());
         rootSachMuon.child(user.getUid()).push().setValue(sachMuon);
@@ -40,13 +40,13 @@ public class SachMuonDAO {
 
     public void xacNhanMuon(SachMuon sachMuon){
         Date toDay = new Date();
-        sachMuon.setNgayMuon(dateFormat.format(toDay));
+        sachMuon.setNgayMuon(toDay.getTime()+"");
         update(sachMuon);
     }
 
     public void xacNhanTra(SachMuon sachMuon){
         Date toDay = new Date();
-        sachMuon.setNgayTra(dateFormat.format(toDay));
+        sachMuon.setNgayTra(toDay.getTime()+"");
         update(sachMuon);
         quyenSachDAO.capNhatQuyenSach(sachMuon.getIdQuyenSach(),false);
     }

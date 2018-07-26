@@ -18,12 +18,12 @@
 
     </item>
 
-    <item android:id="@+id/nav_rank"
+    <item
+        android:id="@+id/nav_search"
         android:enabled="true"
-        android:icon="@drawable/tb_general_filled"
+        android:icon="@drawable/tb_search"
         android:title="Xếp hạng"
-        app:showAsAction="ifRoom">
-    </item>
+        app:showAsAction="ifRoom"></item>
 
     <item android:id="@+id/nav_forum"
         android:enabled="true"

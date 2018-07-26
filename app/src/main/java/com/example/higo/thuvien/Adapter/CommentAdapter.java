@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     Context context;
     int resource;
     ArrayList<Comment> listComment;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss    dd/MM/yyyy");
     public CommentAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Comment> objects) {
         super(context, resource, objects);
         this.context = context;
@@ -50,12 +52,14 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         TextView txtTimeComment = convertView.findViewById(R.id.txtTimeComment);
         final CircleImageView imgUserComment = convertView.findViewById(R.id.imgUserComment);
         Comment comment = listComment.get(position);
-        txtTimeComment.setText(comment.getTime());
+        long time = Long.parseLong(comment.getTime());
+        txtTimeComment.setText(dateFormat.format(time));
         txtContentComment.setText(comment.getContent());
         new UserDAO().searchByID(comment.getIdUser()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtUserComment.setText(dataSnapshot.getValue(User.class).getEmail());
+
+                txtUserComment.setText(dataSnapshot.getValue(User.class).getLastName());
                 Picasso.get().load(dataSnapshot.getValue(User.class).getImgURL()).into(imgUserComment);
 
             }

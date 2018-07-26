@@ -1,5 +1,6 @@
 package com.example.higo.thuvien.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.Adapter.SachMuonAdapter;
 import com.example.higo.thuvien.DAO.BookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
@@ -46,7 +48,24 @@ public class FragmentSachDaTra extends Fragment {
         lvSachMuon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                SachMuon sachMuon = listSachMuon.get(i);
+                new BookDAO().getBookByQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String idBook=null;
+                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                            idBook=dataSnapshot1.getKey();
+                        }
+                        Intent intent = new Intent(getContext(), ReviewActivity.class);
+                        intent.putExtra("idBook",idBook);
+                        startActivity(intent);
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }

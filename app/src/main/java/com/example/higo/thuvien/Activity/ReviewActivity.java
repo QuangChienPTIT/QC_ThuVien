@@ -1,6 +1,8 @@
 package com.example.higo.thuvien.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Rating;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.example.higo.thuvien.DAO.QuyenSachDAO;
 import com.example.higo.thuvien.DAO.RateBookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
 import com.example.higo.thuvien.DAO.TheLoaiDAO;
+import com.example.higo.thuvien.DAO.UserDAO;
 import com.example.higo.thuvien.Model.Author;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.Model.QuyenSach;
@@ -60,11 +63,13 @@ public class ReviewActivity extends AppCompatActivity {
     private RatingBar ratingBarReview;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Button btnComment;
-    private Button btnTheoDoi;
+    private Button btnYeuThich;
     private BookDAO bookDAO = new BookDAO();
     private SachMuonDAO sachMuonDAO = new SachMuonDAO();
     private QuyenSachDAO quyenSachDAO = new QuyenSachDAO();
     private RateBookDAO rateBookDAO = new RateBookDAO();
+    private TheLoaiDAO theLoaiDAO = new TheLoaiDAO();
+    private UserDAO userDAO = new UserDAO();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,7 @@ public class ReviewActivity extends AppCompatActivity {
         imgReviewBook = findViewById(R.id.imgReviewBook);
         btnMuonSach = findViewById(R.id.btnMuonSach);
         btnComment = findViewById(R.id.btnComment);
-        btnTheoDoi = findViewById(R.id.btnTheoDoi);
+        btnYeuThich = findViewById(R.id.btnTheoDoi);
         ratingBarReview = findViewById(R.id.ratingBarReview);
         collapsingToolbarLayout = findViewById(R.id.CollapsingToolbarLayout) ;
         kiemTraSach();
@@ -118,12 +123,8 @@ public class ReviewActivity extends AppCompatActivity {
         btnMuonSach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user != null) {
 
-                    new SachMuonDAO().dangKyMuon(txtQuyenSach.getText().toString());
-                    Toast.makeText(ReviewActivity.this, "Đăng ký mượn sách thành công", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(ReviewActivity.this, "Bạn phải đăng nhập để sử dụng chức năng này", Toast.LENGTH_LONG).show();
+                kiemTraTaiKhoan();
             }
         });
 
@@ -143,10 +144,10 @@ public class ReviewActivity extends AppCompatActivity {
                 return false;
             }
         });
-        btnTheoDoi.setOnClickListener(new View.OnClickListener() {
+        btnYeuThich.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadDialogRating();
+                bookDAO.addSachYeuThich(idBook,user.getUid());
             }
         });
     }
@@ -162,6 +163,17 @@ public class ReviewActivity extends AppCompatActivity {
                     txtBookName.setText(book.getName());
                     collapsingToolbarLayout.setTitle(book.getName());
                     txtDescription.setText(book.getDescription());
+                    theLoaiDAO.searchTypeByidType(book.getIdType()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            txtTheLoai.setText(dataSnapshot.child("name").getValue().toString());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     Picasso.get().load(book.getImgURL().toString()).into(imgReviewBook);
 
             }
@@ -171,7 +183,7 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
-        setTxtTheLoai(idBook);
+//        setTxtTheLoai(idBook);
         setTxtTacGia(idBook);
         setTxtSoLuong(idBook);
         setRatingBarReview(idBook);
@@ -197,61 +209,64 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
     }
-
     private void setTxtSoLuong(String idBook) {
         bookDAO.soLuongSachConLai(idBook).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                     int soLuong=0;
                     for(DataSnapshot data:dataSnapshot.getChildren()){
                         QuyenSach quyenSach = data.getValue(QuyenSach.class);
                         if(quyenSach.getTinhTrang()!=3&&!quyenSach.isDangMuon()){
                             soLuong++;
-
                         }
                         txtSoLuong.setText("Số Lượng : "+ soLuong);
                     }
-
+                    if (soLuong==0) {
+                        btnMuonSach.setText("ĐÃ HẾT SÁCH");
+                        btnMuonSach.setEnabled(false);
+                    }
+                    else{
+                        btnMuonSach.setText("MƯỢN SÁCH");
+                        btnMuonSach.setEnabled(true);
+                    }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
     }
 
-    private void setTxtTheLoai(String idBook) {new TheLoaiDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            txtTheLoai.setText("");
-            for(DataSnapshot data:dataSnapshot.getChildren()){
-                new TheLoaiDAO().searchTypeByidType(data.getKey()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String s = txtTheLoai.getText().toString();
-                        if(TextUtils.isEmpty(s))
-                            txtTheLoai.setText(dataSnapshot.getValue(TheLoai.class).getName());
-                        else
-                            txtTheLoai.setText(s + " , "+dataSnapshot.getValue(TheLoai.class).getName());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    });
-    }
+//    private void setTxtTheLoai(String idBook) {
+//        new TheLoaiDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
+//        @Override
+//        public void onDataChange(DataSnapshot dataSnapshot) {
+//            txtTheLoai.setText("");
+//            for(DataSnapshot data:dataSnapshot.getChildren()){
+//                new TheLoaiDAO().searchTypeByidType(data.getKey()).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        String s = txtTheLoai.getText().toString();
+//                        if(TextUtils.isEmpty(s))
+//                            txtTheLoai.setText(dataSnapshot.getValue(TheLoai.class).getName());
+//                        else
+//                            txtTheLoai.setText(s + " , "+dataSnapshot.getValue(TheLoai.class).getName());
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//        }
+//
+//        @Override
+//        public void onCancelled(DatabaseError databaseError) {
+//
+//        }
+//    });
+//    }
 
     private void setTxtTacGia(String idBook) {
         new AuthorDAO().searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
@@ -259,21 +274,11 @@ public class ReviewActivity extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             txtTacGia.setText("");
             for(DataSnapshot data:dataSnapshot.getChildren()){
-                new AuthorDAO().searchTacGiaById(data.getKey()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String s = txtTacGia.getText().toString();
-                        if(TextUtils.isEmpty(s))
-                            txtTacGia.setText(dataSnapshot.getValue(Author.class).getName());
-                        else
-                            txtTacGia.setText(s + " , "+dataSnapshot.getValue(Author.class).getName());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                String s = txtTacGia.getText().toString();
+                if(TextUtils.isEmpty(s))
+                    txtTacGia.setText(data.getValue(Author.class).getName());
+                else
+                    txtTacGia.setText(s + " , "+data.getValue(Author.class).getName());
             }
         }
 
@@ -285,17 +290,29 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     public void kiemTraSach() {
-        demSoSach();
+
     }
 
-    private void demSoSach() {
-        sachMuonDAO.getListSachMuonByUser(user.getUid()).orderByChild("ngayTra").equalTo(null).addValueEventListener(new ValueEventListener() {
+    private void kiemTraTaiKhoan() {
+        userDAO.isBlocked().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount()>5){
-                    btnMuonSach.setText("KHÔNG THỂ MƯỢN THÊM");
-                    btnMuonSach.setEnabled(false);
+                if (dataSnapshot.getValue(Boolean.class)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReviewActivity.this);
+                    builder.setTitle("Mượn sách");
+                    builder.setMessage("Tài khoản đã bị khóa");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Đã hiểu", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 }
+                else
+                    demSoSachSachMuon();
             }
 
             @Override
@@ -304,6 +321,45 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void demSoSachSachMuon() {
+        sachMuonDAO.getListSachMuonByUser(user.getUid()).orderByChild("ngayTra").equalTo(null).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount()>2){
+//                    btnMuonSach.setText("KHÔNG THỂ MƯỢN THÊM");
+//                    btnMuonSach.setEnabled(false);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReviewActivity.this);
+                    builder.setTitle("Mượn sách");
+                    builder.setMessage("Bạn chỉ có thể mượn 3 cuốn sách!!!");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Đã hiểu", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else muonSach();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void muonSach() {
+        if (user != null) {
+            sachMuonDAO.dangKyMuon(txtQuyenSach.getText().toString());
+            Toast.makeText(ReviewActivity.this, "Đăng ký mượn sách thành công", Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(ReviewActivity.this, "Bạn phải đăng nhập để sử dụng chức năng này", Toast.LENGTH_LONG).show();
+    }
+
 
     private void loadDialogRating() {
         final Dialog dialog = new Dialog(ReviewActivity.this);

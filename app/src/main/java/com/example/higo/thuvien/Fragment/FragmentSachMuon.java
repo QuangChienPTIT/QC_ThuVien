@@ -1,5 +1,6 @@
 package com.example.higo.thuvien.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -12,8 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.Adapter.SachMuonAdapter;
+import com.example.higo.thuvien.DAO.BookDAO;
 import com.example.higo.thuvien.DAO.SachMuonDAO;
+import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.Model.SachMuon;
 import com.example.higo.thuvien.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,12 +41,12 @@ public class FragmentSachMuon extends Fragment {
     SachMuonAdapter sachMuonAdapter;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference rootSachMuon = FirebaseDatabase.getInstance().getReference().child("SachMuon");
+    BookDAO bookDAO = new BookDAO();
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_sachmuon,container,false);
         addControls(view);
         addEvents();
-
         return view;
     }
 
@@ -51,7 +55,23 @@ public class FragmentSachMuon extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 SachMuon sachMuon = listSachMuon.get(i);
-                new SachMuonDAO().xacNhanTra(sachMuon);
+                bookDAO.getBookByQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String idBook=null;
+                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                            idBook=dataSnapshot1.getKey();
+                        }
+                        Intent intent = new Intent(getContext(), ReviewActivity.class);
+                        intent.putExtra("idBook",idBook);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }
@@ -66,7 +86,6 @@ public class FragmentSachMuon extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listSachMuon.clear();
-
                     for(DataSnapshot data:dataSnapshot.getChildren()){
                         if(data.child("ngayTra").getValue()==null&&data.child("ngayMuon").getValue()!=null){
                             SachMuon sachMuon = data.getValue(SachMuon.class);
@@ -74,11 +93,9 @@ public class FragmentSachMuon extends Fragment {
                             listSachMuon.add(sachMuon);
                         }
                     }
-
                 sapXepSachMuon(listSachMuon);
                 sachMuonAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

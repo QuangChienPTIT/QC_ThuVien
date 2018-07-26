@@ -26,7 +26,7 @@ public class CommentDAO  {
         Comment comment = new Comment();
         comment.setIdUser(user.getUid());
         comment.setContent(content);
-        comment.setTime(dateFormat.format(toDay));
+        comment.setTime(toDay.getTime()+"");
         rootComment.child(idbook).push().setValue(comment);
     }
 }

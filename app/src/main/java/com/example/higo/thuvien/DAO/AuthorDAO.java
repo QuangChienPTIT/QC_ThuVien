@@ -14,12 +14,24 @@ public class AuthorDAO {
     }
 
     public Query searchByIdBook(String idBook){
-        Query query = FirebaseDatabase.getInstance().getReference().child("AuthorBook").orderByChild(idBook).equalTo(true);
+//        Query query = FirebaseDatabase.getInstance().getReference().child("AuthorBook").orderByChild(idBook).equalTo(true);
+        Query query = root.child("Author").orderByChild("Book/"+idBook).equalTo(true);
         return query;
     }
 
     public Query searchTacGiaById(String idAuthor){
         Query query = FirebaseDatabase.getInstance().getReference().child("Author").child(idAuthor);
+        return query;
+    }
+
+    public Query searchByName(String name){
+        Query query=root.child("Author").orderByChild("name").startAt(name).endAt(name+"\uf8ff");
+        return query;
+    }
+
+    public Query searchBookByAuthor(String idAuthor){
+        //Query query=root.child("AuthorBook").child(idAuthor);
+        Query query = root.child("Author/"+idAuthor+"/Book");
         return query;
     }
 }

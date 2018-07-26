@@ -39,7 +39,7 @@ public class FragmentBookType extends Fragment {
     private GridView gridView;
     private List<Book> listBook;
     private GridAdapterBookType adapterBookType;
-
+    private BookDAO bookDAO = new BookDAO();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -47,26 +47,16 @@ public class FragmentBookType extends Fragment {
         View view = inflater.inflate(R.layout.fragment_booktype,container,false);
         addControls(view);
         //add danh sach sach theo idType
-        new BookDAO().listBookByidType(idType).addValueEventListener(new ValueEventListener() {
+        bookDAO.listBookByidType(idType).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listBook.clear();
-                for (final DataSnapshot data:dataSnapshot.getChildren()){
-                    new BookDAO().searchByID(data.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Book book = dataSnapshot.getValue(Book.class);
-                            book.setId(dataSnapshot.getKey());
-                            listBook.add(book);
-                            adapterBookType.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                for (DataSnapshot data:dataSnapshot.getChildren()){
+                    Book book = data.getValue(Book.class);
+                    book.setId(data.getKey().toString());
+                    listBook.add(book);
                 }
+                adapterBookType.notifyDataSetChanged();
             }
 
             @Override

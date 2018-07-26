@@ -17,6 +17,7 @@ import com.example.higo.thuvien.Fragment.FragmentBookshelf;
 import com.example.higo.thuvien.Fragment.FragmentLibrary;
 import com.example.higo.thuvien.Fragment.FragmentRank;
 import com.example.higo.thuvien.Fragment.FragmentSachMuon;
+import com.example.higo.thuvien.Fragment.FragmentSearch;
 import com.example.higo.thuvien.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -66,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
                     currentfragment = new FragmentBookshelf();
                     switchFragment(currentfragment);
                     return true;
-                case R.id.nav_rank:
-                    txtTitle.setText("Xếp hạng");
-                    currentfragment = new FragmentRank();
+                case R.id.nav_search:
+                    txtTitle.setText("Tìm kiếm");
+                    currentfragment = new FragmentSearch();
                     switchFragment(currentfragment);
                     return true;
                 case R.id.nav_forum:

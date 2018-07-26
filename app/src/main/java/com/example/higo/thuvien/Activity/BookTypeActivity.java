@@ -42,8 +42,6 @@ public class BookTypeActivity extends AppCompatActivity {
     private void setupViewPaper() {
 
          adapter = new ViewPagerAdapter(getSupportFragmentManager());
-         //adapter.addFragment(new OneFragment(),"Dac biet");
-         //viewPager.setAdapter(adapter);
         FirebaseDatabase.getInstance().getReference().child("Type").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

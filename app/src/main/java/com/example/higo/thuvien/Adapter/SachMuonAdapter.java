@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
     private Context context;
     private ArrayList<SachMuon> listSachMuon;
     private int resource;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss    dd/MM/yyyy");
 
     public SachMuonAdapter(@NonNull Context context, int resource, @NonNull ArrayList<SachMuon> listSachMuon) {
         super(context, resource, listSachMuon);
@@ -52,20 +54,35 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
         final ImageView imgSachMuon = convertView.findViewById(R.id.imgSachMuon);
         TextView txtNgayMuon = convertView.findViewById(R.id.txtNgayMuon);
         SachMuon sachMuon = listSachMuon.get(position);
-        new QuyenSachDAO().getIdBook(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
+//        new QuyenSachDAO().getIdBook(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                new BookDAO().searchByID(dataSnapshot.getValue().toString()).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        txtTenSach.setText(dataSnapshot.child("name").getValue().toString());
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+        new QuyenSachDAO().getBookbyIdQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                new BookDAO().searchByID(dataSnapshot.getValue().toString()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        txtTenSach.setText(dataSnapshot.child("name").getValue().toString());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    txtTenSach.setText(dataSnapshot1.child("name").getValue().toString());
+                    Picasso.get().load(dataSnapshot1.child("imgURL").getValue().toString()).into(imgSachMuon);
+                }
             }
 
             @Override
@@ -78,6 +95,7 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 txtUserName.setText(dataSnapshot.getValue(User.class).getEmail());
+
             }
 
             @Override
@@ -86,12 +104,17 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
             }
         });
         if(sachMuon.getNgayTra()!=null){
-            txtNgayMuon.setText("Ngày trả : "+sachMuon.getNgayTra());
+            long time = Long.parseLong(sachMuon.getNgayTra());
+            txtNgayMuon.setText("Ngày trả : "+dateFormat.format(time));
         }
         else if(sachMuon.getNgayMuon()!=null){
-            txtNgayMuon.setText("Ngày mượn : "+sachMuon.getNgayMuon());
+            long time = Long.parseLong(sachMuon.getNgayMuon());
+            txtNgayMuon.setText("Ngày mượn : "+dateFormat.format(time));
         }
-        else txtNgayMuon.setText("Ngày đăng ký : "+sachMuon.getNgayDangKy());
+        else {
+            long time = Long.parseLong(sachMuon.getNgayDangKy());
+            txtNgayMuon.setText("Ngày đăng ký : "+dateFormat.format(time));
+        }
 
         return convertView;
     }

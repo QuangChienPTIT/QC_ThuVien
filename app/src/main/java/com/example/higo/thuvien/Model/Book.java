@@ -5,7 +5,7 @@ public class Book {
     private String imgURL;
     private String id;
     private String idAuthor;
-    private String type;
+    private String idType;
     private String description;
     private int slTong;
     private int slConLai;
@@ -28,6 +28,13 @@ public class Book {
         this.imgURL = imgURL;
     }
 
+    public String getIdType() {
+        return idType;
+    }
+
+    public void setIdType(String idType) {
+        this.idType = idType;
+    }
 
     public String getName() {
         return name;
