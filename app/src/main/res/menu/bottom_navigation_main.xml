@@ -22,13 +22,13 @@
         android:id="@+id/nav_search"
         android:enabled="true"
         android:icon="@drawable/tb_search"
-        android:title="Xếp hạng"
+        android:title="Tìm kiếm"
         app:showAsAction="ifRoom"></item>
 
     <item android:id="@+id/nav_forum"
         android:enabled="true"
         android:icon="@drawable/tb_wall_filled"
-        android:title="Tường"
+        android:title="Thể loại"
         app:showAsAction="ifRoom">
     </item>
 

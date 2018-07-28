@@ -10,6 +10,24 @@ public class User {
     private String phoneNumber;
     private int age;
     private String cmnd;
+    private boolean isBlocked;
+    private String role;
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean isBlocked) {
+        this.isBlocked = isBlocked;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getImgURL() {
         return imgURL;

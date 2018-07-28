@@ -16,7 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.higo.thuvien.Activity.ActivityYeuThich;
 import com.example.higo.thuvien.Activity.LoginActivity;
+import com.example.higo.thuvien.Activity.MainActivity;
 import com.example.higo.thuvien.DAO.UserDAO;
 import com.example.higo.thuvien.Model.User;
 import com.example.higo.thuvien.R;
@@ -48,7 +50,7 @@ public class FragmentAccount extends Fragment {
     private RelativeLayout layoutSetting;
     private RelativeLayout layoutLogout;
     private RelativeLayout layoutTaiKhoan;
-    private RelativeLayout layoutTruyenDangDK;
+    private RelativeLayout layoutSachYeuThich;
     private RelativeLayout layoutTrenDaBinhLuan;
     private RelativeLayout layoutAbout;
     private RelativeLayout layoutThongTinTaiKhoan;
@@ -67,25 +69,33 @@ public class FragmentAccount extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_account,container,false);
         layoutLogout = view.findViewById(R.id.layoutLogout);
+        TextView txtLogout = view.findViewById(R.id.txtLogout);
         if (user!=null){
+            txtLogout.setText("Đăng xuất");
             uIdAccount = user.getUid();
             addControls(view);
             addEvents();
         }
         else {
             Toast.makeText(getContext(),"Vui lòng đăng nhập để sử dụng các chức năng",Toast.LENGTH_LONG);
-
-            TextView txtLogout = view.findViewById(R.id.txtLogout);
             txtLogout.setText("Đăng nhập");
         }
         layoutLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                startActivity(intent);
+                if(user!=null) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent refresh = new Intent(getActivity(), MainActivity.class);
+                    startActivity(refresh);
+                    getActivity().finish(); //
+                }
+                else {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
+
         return view;
     }
 
@@ -97,7 +107,7 @@ public class FragmentAccount extends Fragment {
         layoutAbout = view.findViewById(R.id.layoutAbout);
         layoutSetting = view.findViewById(R.id.layoutSetting);
         layoutLogout = view.findViewById(R.id.layoutLogout);
-        layoutTruyenDangDK = view.findViewById(R.id.layoutTruyenDangDK);
+        layoutSachYeuThich = view.findViewById(R.id.layoutSachYeuThich);
         layoutTrenDaBinhLuan = view.findViewById(R.id.layoutTruyenDaBinhLuan);
         layoutThongTinTaiKhoan = view.findViewById(R.id.layoutThongTinTaiKhoan);
         mStorageRef = FirebaseStorage.getInstance().getReference("ImageUser");
@@ -144,6 +154,16 @@ public class FragmentAccount extends Fragment {
                 loadDialogAccount();
             }
         });
+
+        layoutSachYeuThich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ActivityYeuThich.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
     }

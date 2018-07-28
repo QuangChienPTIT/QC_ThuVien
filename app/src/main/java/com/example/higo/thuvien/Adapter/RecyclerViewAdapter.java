@@ -10,16 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.higo.thuvien.Activity.LoginActivity;
 import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.DAO.AuthorDAO;
 import com.example.higo.thuvien.DAO.BookDAO;
+import com.example.higo.thuvien.DAO.SachMuonDAO;
+import com.example.higo.thuvien.DAO.TheLoaiDAO;
 import com.example.higo.thuvien.Model.Author;
 import com.example.higo.thuvien.Model.Book;
-import com.example.higo.thuvien.Model.QuyenSach;
-import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +30,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>{
     List<Book> data = new ArrayList<>();
     BookDAO bookDAO = new BookDAO();
+    long soLuongSach;
 
     public RecyclerViewAdapter(List<Book> data) {
         this.data = data;
@@ -48,22 +47,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(final RecyclerViewHolder holder, int position) {
         Book book = data.get(position);
         holder.txtBookName.setText(book.getName());
-//        int sl = book.getSlConLai();
-//        if(sl>0){
-//            holder.txtSoLuongCon.setText("Tình trạng : Còn sách");
-//        }
-//        else
-//            holder.txtSoLuongCon.setText("Tình trạng : Hết sách");
-        bookDAO.soLuongSachConLai(book.getId()).addValueEventListener(new ValueEventListener() {
+        holder.txtTheLoai.setText(0 + "");
+        bookDAO.getQuyenSachByBook(book.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int soLuong=0;
-                for(DataSnapshot data:dataSnapshot.getChildren()){
-                    QuyenSach quyenSach = data.getValue(QuyenSach.class);
-                    if(quyenSach.getTinhTrang()!=3&&!quyenSach.isDangMuon()){
-                        soLuong++;
-                    }
-                    holder.txtSoLuongCon.setText("Số lượng còn lại : "+ soLuong);
+//                soLuongSach = dataSnapshot.getChildrenCount();
+                final ArrayList<String> sachKhaDung = new ArrayList<>();
+                for(final DataSnapshot data:dataSnapshot.getChildren()) {
+                    new SachMuonDAO().searchByQuyenSach(data.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            sachKhaDung.remove(data.getKey());
+                            boolean khaDung = true;
+                            for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                                if(dataSnapshot1.child("ngayTra").getValue()==null){
+                                    sachKhaDung.remove(data.getKey());
+                                    khaDung = false;
+                                    break;
+                                }
+                            }
+                            if(khaDung){
+                                sachKhaDung.add(data.getKey().toString());
+                            }
+                            holder.txtSoLuong.setText(sachKhaDung.size()+"");
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
             @Override
@@ -72,34 +85,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
         Picasso.get().load(book.getImgURL().toString()).into(holder.imgBook);
-//        new AuthorDAO().searchByIdBook(book.getId()).addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(DataSnapshot dataSnapshot) {
-////                holder.txtAuthorName.setText("");
-////                for(DataSnapshot data:dataSnapshot.getChildren()){
-////                    new AuthorDAO().searchTacGiaById(data.getKey()).addValueEventListener(new ValueEventListener() {
-////                        @Override
-////                        public void onDataChange(DataSnapshot dataSnapshot) {
-////                            String s = holder.txtAuthorName.getText().toString();
-////                            if(TextUtils.isEmpty(s))
-////                                holder.txtAuthorName.setText(dataSnapshot.getValue(Author.class).getName());
-////                            else
-////                                holder.txtAuthorName.setText(s + " , "+dataSnapshot.getValue(Author.class).getName());
-////                        }
-////
-////                        @Override
-////                        public void onCancelled(DatabaseError databaseError) {
-////
-////                        }
-////                    });
-////                }
-////            }
-////
-////            @Override
-////            public void onCancelled(DatabaseError databaseError) {
-////
-////            }
-////        });
 
         new AuthorDAO().searchByIdBook(book.getId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -120,6 +105,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+        new TheLoaiDAO().searchTypeByidType(book.getIdType()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.txtTheLoai.setText(dataSnapshot.child("name").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -131,7 +128,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtBookName;
         TextView txtAuthorName;
-        TextView txtSoLuongCon;
+        TextView txtTheLoai;
+        TextView txtSoLuong;
         ImageView imgBook;
         Context context;
 
@@ -139,7 +137,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             txtBookName = itemView.findViewById(R.id.txtBookName);
             txtAuthorName = itemView.findViewById(R.id.txtAuthorName);
-            txtSoLuongCon = itemView.findViewById(R.id.txtSoLuongCon);
+            txtTheLoai = itemView.findViewById(R.id.txtItemTheLoai);
+            txtSoLuong = itemView.findViewById(R.id.txtItemSoLuong);
             imgBook = itemView.findViewById(R.id.imgBook);
             this.context = itemView.getContext();
             itemView.setOnClickListener(this);

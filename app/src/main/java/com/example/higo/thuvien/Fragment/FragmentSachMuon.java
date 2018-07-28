@@ -89,7 +89,7 @@ public class FragmentSachMuon extends Fragment {
                     for(DataSnapshot data:dataSnapshot.getChildren()){
                         if(data.child("ngayTra").getValue()==null&&data.child("ngayMuon").getValue()!=null){
                             SachMuon sachMuon = data.getValue(SachMuon.class);
-                            sachMuon.setIdUser(data.getRef().getParent().getKey());
+                            sachMuon.setIdUser(sachMuon.getIdUser());
                             listSachMuon.add(sachMuon);
                         }
                     }

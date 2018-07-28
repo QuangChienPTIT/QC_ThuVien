@@ -54,27 +54,6 @@ public class SachMuonAdapter extends ArrayAdapter<SachMuon>{
         final ImageView imgSachMuon = convertView.findViewById(R.id.imgSachMuon);
         TextView txtNgayMuon = convertView.findViewById(R.id.txtNgayMuon);
         SachMuon sachMuon = listSachMuon.get(position);
-//        new QuyenSachDAO().getIdBook(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                new BookDAO().searchByID(dataSnapshot.getValue().toString()).addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        txtTenSach.setText(dataSnapshot.child("name").getValue().toString());
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
         new QuyenSachDAO().getBookbyIdQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
             @Override

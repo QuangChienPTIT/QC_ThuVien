@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.higo.thuvien.Fragment.FragmentAccount;
 import com.example.higo.thuvien.Fragment.FragmentBookshelf;
@@ -20,22 +21,20 @@ import com.example.higo.thuvien.Fragment.FragmentSachMuon;
 import com.example.higo.thuvien.Fragment.FragmentSearch;
 import com.example.higo.thuvien.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     Fragment currentfragment = null;
     FragmentManager fragmentManager;
     FragmentTransaction transaction;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private TextView txtTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(mAuth.getCurrentUser()==null){
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-            startActivity(intent);
-        }
         addControls();
         addEvents();
     }
@@ -44,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView= findViewById(R.id.botton_navigation);
         txtTitle =findViewById(R.id.txtTitle);
 
-        bottomNavigationView.setSelectedItemId(R.id.nav_tusach);
+        bottomNavigationView.setSelectedItemId(R.id.nav_thuvien);
+        currentfragment = new FragmentLibrary();
+        switchFragment(currentfragment);
     }
     public void addEvents() {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -63,9 +64,16 @@ public class MainActivity extends AppCompatActivity {
                     switchFragment(currentfragment);
                     return true;
                 case R.id.nav_tusach:
-                    txtTitle.setText("Tủ sách");
-                    currentfragment = new FragmentBookshelf();
-                    switchFragment(currentfragment);
+                    if(user!=null) {
+                        txtTitle.setText("Tủ sách");
+                        currentfragment = new FragmentBookshelf();
+                        switchFragment(currentfragment);
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                    }
                     return true;
                 case R.id.nav_search:
                     txtTitle.setText("Tìm kiếm");

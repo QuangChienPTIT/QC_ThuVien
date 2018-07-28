@@ -7,9 +7,8 @@ import com.google.firebase.database.Query;
 
 public class RateBookDAO {
     DatabaseReference rootRate = FirebaseDatabase.getInstance().getReference().child("Rate");
-    public void insert(RateBook rate){
-        rootRate.child(rate.getIdBook()).child(rate.getIdUser()).child("rate").setValue(rate.getRate());
-        rootRate.child(rate.getIdBook()).child(rate.getIdUser()).child("content").setValue(rate.getContent());
+    public void insert(RateBook rate,String idBook){
+        rootRate.child(idBook).push().setValue(rate);
     }
 
     public Query getRateByIdBook(String idBook){

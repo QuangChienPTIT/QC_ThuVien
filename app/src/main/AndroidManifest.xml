@@ -28,6 +28,8 @@
         <activity android:name=".Activity.BookTypeActivity">
 
         </activity>
+        <activity android:name=".Activity.ActivityYeuThich"></activity>
+        <activity android:name=".Activity.DanhGiaActivity"></activity>
     </application>
 
 </manifest>

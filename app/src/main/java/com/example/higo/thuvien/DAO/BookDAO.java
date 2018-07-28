@@ -44,7 +44,7 @@ public class BookDAO {
         });
     }
 
-    public Query soLuongSachConLai(String idBook){
+    public Query getQuyenSachByBook(String idBook){
         Query query = FirebaseDatabase.getInstance().getReference().child("Book/"+idBook+"/QuyenSach");
         return query;
     }
@@ -60,13 +60,23 @@ public class BookDAO {
         return query;
     }
 
+    public Query searchByType(String idType){
+        Query query = root.child("Book").orderByChild("idType").equalTo(idType);
+        return query;
+    }
+
     public Query getAllBook(){
-        Query bookRoot = FirebaseDatabase.getInstance().getReference().child("Book").orderByChild("name").limitToLast(20);
+        Query bookRoot = FirebaseDatabase.getInstance().getReference().child("Book").orderByChild("name").limitToLast(100);
         return bookRoot;
     }
 
     public void addSachYeuThich(String idBook,String idUser){
         root.child("Book/"+idBook+"/YeuThich/"+idUser).setValue(true);
+    }
+
+    public Query getSachYeuThich(String idUser){
+        Query query = root.child("Book").orderByChild("YeuThich/"+idUser).equalTo(true);
+        return query;
     }
 
 

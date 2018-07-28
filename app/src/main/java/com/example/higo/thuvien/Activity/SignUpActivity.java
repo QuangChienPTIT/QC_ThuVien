@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.higo.thuvien.DAO.UserDAO;
 import com.example.higo.thuvien.Model.User;
 import com.example.higo.thuvien.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -94,9 +95,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     user.setAddress(address);
                                     user.setEmail(email);
                                     user.setPhoneNumber(phoneNumber);
-                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                    DatabaseReference userRoot = database.getReference("User").child(mUser.getUid());
-                                    userRoot.setValue(user);
+                                    user.setBlocked(false);
+                                    user.setRole("user");
+                                    new UserDAO().insertUser(user,mUser.getUid());
                                     Toast.makeText(SignUpActivity.this,"Đăng kí thành công",Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                     startActivity(intent);

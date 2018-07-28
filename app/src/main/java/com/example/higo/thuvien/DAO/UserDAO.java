@@ -15,8 +15,8 @@ public class UserDAO {
         return query;
     }
 
-    public void insertUser(User user){
-        rootUser.setValue(user);
+    public void insertUser(User user,String uid){
+        rootUser.child(uid).setValue(user);
     }
 
     public void updateUser(User user){

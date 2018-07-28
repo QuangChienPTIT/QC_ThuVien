@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.higo.thuvien.Activity.ReviewActivity;
 import com.example.higo.thuvien.Adapter.SachMuonAdapter;
@@ -33,15 +34,16 @@ public class FragmentSachDangKy extends Fragment {
     ListView lvSachMuon;
     ArrayList<SachMuon> listSachMuon;
     SachMuonAdapter sachMuonAdapter;
-    int KEY;
     Bundle bundle;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference rootSachMuon = FirebaseDatabase.getInstance().getReference().child("SachMuon");
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_sachmuon,container,false);
-        addControls(view);
-        addEvents();
+        View view = inflater.inflate(R.layout.fragment_sachmuon, container, false);
+            addControls(view);
+            addEvents();
+
 
         return view;
     }
@@ -54,12 +56,12 @@ public class FragmentSachDangKy extends Fragment {
                 new BookDAO().getBookByQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String idBook=null;
-                        for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                            idBook=dataSnapshot1.getKey();
+                        String idBook = null;
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            idBook = dataSnapshot1.getKey();
                         }
                         Intent intent = new Intent(getContext(), ReviewActivity.class);
-                        intent.putExtra("idBook",idBook);
+                        intent.putExtra("idBook", idBook);
                         startActivity(intent);
                     }
 
@@ -75,7 +77,7 @@ public class FragmentSachDangKy extends Fragment {
     private void addControls(View view) {
         lvSachMuon = view.findViewById(R.id.lv_SachMuon);
         listSachMuon = new ArrayList<>();
-        sachMuonAdapter = new SachMuonAdapter(getActivity(),R.layout.item_listsachmuon,listSachMuon);
+        sachMuonAdapter = new SachMuonAdapter(getActivity(), R.layout.item_listsachmuon, listSachMuon);
         lvSachMuon.setAdapter(sachMuonAdapter);
 
         new SachMuonDAO().getListSachMuonByUser(user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -83,10 +85,10 @@ public class FragmentSachDangKy extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listSachMuon.clear();
 
-                for(DataSnapshot data:dataSnapshot.getChildren()){
-                    if(data.child("ngayMuon").getValue()==null){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    if (data.child("ngayMuon").getValue() == null) {
                         SachMuon sachMuon = data.getValue(SachMuon.class);
-                        sachMuon.setIdUser(data.getRef().getParent().getKey());
+                        sachMuon.setIdUser(sachMuon.getIdUser());
                         listSachMuon.add(sachMuon);
                     }
                 }
@@ -104,7 +106,7 @@ public class FragmentSachDangKy extends Fragment {
     }
 
     private void sapXepSachMuon(ArrayList<SachMuon> listSachMuon) {
-        Collections.sort(listSachMuon,new Comparator<SachMuon>() {
+        Collections.sort(listSachMuon, new Comparator<SachMuon>() {
             public int compare(SachMuon o1, SachMuon o2) {
                 return o1.getNgayDangKy().toString().compareTo(o2.getNgayMuon().toString());
             }

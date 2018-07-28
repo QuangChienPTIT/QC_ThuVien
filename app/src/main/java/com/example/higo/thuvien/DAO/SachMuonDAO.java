@@ -33,8 +33,9 @@ public class SachMuonDAO {
         sachMuon.setNgayDangKy(toDay.getTime()+"");
         sachMuon.setIdQuyenSach(idQuyenSach);
         sachMuon.setIdUser(user.getUid());
-        rootSachMuon.child(user.getUid()).push().setValue(sachMuon);
-        quyenSachDAO.capNhatQuyenSach(idQuyenSach,true);
+//        rootSachMuon.child(user.getUid()).push().setValue(sachMuon);
+        rootSachMuon.push().setValue(sachMuon);
+//        quyenSachDAO.capNhatQuyenSach(idQuyenSach,true);
 
     }
 
@@ -74,9 +75,19 @@ public class SachMuonDAO {
 
 
     public Query getListSachMuonByUser(String idUser){
-        Query query = rootSachMuon.child(idUser);
+//        Query query = rootSachMuon.child(idUser);
+        Query query= rootSachMuon.orderByChild("idUser").equalTo(idUser);
         return query;
+    }
 
+    public Query getListSachDangMuon(String idUser){
+        Query query= rootSachMuon.orderByChild("idUser").equalTo(idUser);
+        return query;
+    }
+
+    public Query searchByQuyenSach(String idQuyenSach){
+        Query query = rootSachMuon.orderByChild("idQuyenSach").equalTo(idQuyenSach);
+        return query;
     }
 
 }

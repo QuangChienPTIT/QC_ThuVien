@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import com.example.higo.thuvien.Adapter.RecyclerViewAdapter;
 import com.example.higo.thuvien.DAO.AuthorDAO;
 import com.example.higo.thuvien.DAO.BookDAO;
+import com.example.higo.thuvien.DAO.TheLoaiDAO;
 import com.example.higo.thuvien.Model.Book;
 import com.example.higo.thuvien.Model.TheLoai;
 import com.example.higo.thuvien.R;
@@ -34,6 +35,7 @@ public class FragmentSearch extends Fragment {
     SearchView searchView ;
     private BookDAO bookDAO = new BookDAO();
     private AuthorDAO authorDAO = new AuthorDAO();
+    private TheLoaiDAO theLoaiDAO = new TheLoaiDAO();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class FragmentSearch extends Fragment {
     }
 
     private void addEvents() {
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -69,6 +72,35 @@ public class FragmentSearch extends Fragment {
     }
 
     private void searchByTheLoai(String searchString) {
+        listBook.clear();
+        theLoaiDAO.searchByName(searchString).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data:dataSnapshot.getChildren()){
+                    bookDAO.searchByType(data.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot data:dataSnapshot.getChildren()) {
+                                Book book = data.getValue(Book.class);
+                                book.setId(data.getKey().toString());
+                                listBook.add(book);
+                            }
+                            mRecyclerViewAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void searchByBook(String searchString) {

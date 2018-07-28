@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/annonce.main.coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="RtlHardcoded"
-    >
+    tools:ignore="RtlHardcoded">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/flexible.example.appbar"
@@ -36,7 +34,7 @@
                 <ImageView
                     android:id="@+id/imgReviewBook"
                     android:layout_width="220dp"
-                    android:layout_height="200dp"
+                    android:layout_height="233dp"
                     android:layout_weight="1"
                     android:paddingLeft="5dp"
                     app:srcCompat="@drawable/harrypotter_stone" />
@@ -53,8 +51,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:textColor="@color/black"
-                        android:textSize="10dp" />
+                        android:textColor="@color/white"
+                        android:textSize="10dp"
+                        />
 
                     <TextView
                         android:id="@+id/txtBookName"
@@ -74,11 +73,12 @@
                         android:layout_height="wrap_content"
                         android:layout_alignStart="@+id/txtBookName"
                         android:layout_alignTop="@+id/txtTacGia"
-                        android:text="Tác giả :" />
+                        android:text="Tác giả :"
+                        android:textColor="#FFF"/>
 
                     <TextView
                         android:id="@+id/txtTacGia"
-                        android:layout_width="153dp"
+                        android:layout_width="159dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
@@ -100,7 +100,7 @@
 
                     <TextView
                         android:id="@+id/txtTheLoai"
-                        android:layout_width="161dp"
+                        android:layout_width="163dp"
                         android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/txtTacGia"
                         android:layout_alignTop="@+id/textView"
@@ -110,14 +110,23 @@
                         android:textColor="#FFF" />
 
                     <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/txtBookName"
+                        android:layout_alignTop="@+id/txtSoLuong"
+                        android:text="Số Lượng còn lại :"
+                        android:textColor="#FFF"/>
+
+                    <TextView
                         android:id="@+id/txtSoLuong"
-                        android:layout_width="208dp"
+                        android:layout_width="101dp"
                         android:layout_height="20dp"
+                        android:layout_alignEnd="@+id/txtTacGia"
                         android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="109dp"
+                        android:layout_marginTop="105dp"
                         android:fontFamily="sans-serif-light"
-                        android:text="Trạng thái : "
+                        android:text="0"
                         android:textColor="#FFF" />
 
                     <RatingBar
@@ -145,7 +154,18 @@
                         android:layout_marginBottom="107dp"
                         android:layout_marginEnd="84dp"
                         android:text="4.5"
-                        />
+                        android:textColor="#FFF"/>
+
+                    <TextView
+                        android:id="@+id/txtXemDanhGia"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ratingBarReview"
+                        android:layout_marginEnd="-29dp"
+                        android:layout_marginTop="-84dp"
+                        android:layout_toStartOf="@+id/txtQuyenSach"
+                        android:text="Xem đánh giá"
+                        android:textColor="@android:color/darker_gray" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -193,24 +213,54 @@
                         android:id="@+id/txtDescription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-light"
                         android:lineSpacingExtra="8dp"
                         android:text="Description"
-                        android:layout_marginTop="8dp"
-                        android:textSize="14sp"
-                        />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="150dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sách cùng tác giả"
+                        android:textColor="@color/black"
+                        android:layout_margin="5dp"
+                        android:textSize="16dp"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycleViewBookAuthor"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:layout_gravity="bottom"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
-        android:layout_gravity="bottom"
+        android:layout_marginTop="1dp"
         android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -220,29 +270,30 @@
 
             <Button
                 android:id="@+id/btnComment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:text="THẢO LUẬN"
-                android:background="@color/white"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/btnMuonSach"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:background="@color/colorPrimary"
-                android:text="MƯỢN SÁCH"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/btnTheoDoi"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:text="THEO DÕI" />
+                android:text="THẢO LUẬN" />
+
+            <Button
+                android:id="@+id/btnMuonSach"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="MƯỢN SÁCH" />
+
+            <Button
+                android:id="@+id/btnYeuThich"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:text="YÊU THÍCH" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </android.support.design.widget.CoordinatorLayout>
