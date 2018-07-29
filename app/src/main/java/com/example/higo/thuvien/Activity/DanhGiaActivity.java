@@ -42,6 +42,7 @@ public class DanhGiaActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data:dataSnapshot.getChildren()){
                     RateBook danhGia = data.getValue(RateBook.class);
+                    danhGia.setIdUser(data.getKey());
                     listDanhGia.add(danhGia);
                 }
                 danhGiaAdapter.notifyDataSetChanged();

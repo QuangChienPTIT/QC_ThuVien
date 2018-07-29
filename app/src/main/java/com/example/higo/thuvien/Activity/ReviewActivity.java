@@ -411,8 +411,8 @@ public class ReviewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
-//                    finish();
-//                    startActivity(getIntent());
+                    finish();
+                    startActivity(getIntent());
                 }
             });
             AlertDialog alertDialog = builder.create();
@@ -466,23 +466,6 @@ public class ReviewActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerViewAdapter.notifyDataSetChanged();
-//        new BookDAO().getAllBook().addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                listBook.clear();
-//                for (DataSnapshot data:dataSnapshot.getChildren()){
-//                    Book book = data.getValue(Book.class);
-//                    book.setId(data.getKey().toString());
-//                    listBook.add(book);
-//                }
-//                mRecyclerViewAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
         authorDAO.searchByIdBook(idBook).addValueEventListener(new ValueEventListener() {
             @Override
@@ -492,21 +475,27 @@ public class ReviewActivity extends AppCompatActivity {
                     authorDAO.searchBookByAuthor(data.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot data : dataSnapshot.getChildren())
-                                bookDAO.searchByID(data.getKey()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Book book = dataSnapshot.getValue(Book.class);
-                                        book.setId(dataSnapshot.getKey().toString());
-                                        listBook.add(book);
-                                        mRecyclerViewAdapter.notifyDataSetChanged();
-                                    }
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                Log.e("BookAuthorname  ",dataSnapshot1.getKey().toString());
+                            bookDAO.searchByID(dataSnapshot1.getKey()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Book book = new Book();
+                                    book = dataSnapshot.getValue(Book.class);
+////                                        book.setImgURL(data.child("imgURL").getValue().toString());
+////                                        book.setName(data.child("name").getValue().toString());
+////                                        Log.e("BookAuthorname  ",data.child("name").getValue().toString());
+                                    book.setId(dataSnapshot.getKey().toString());
+                                    listBook.add(book);
+                                    mRecyclerViewAdapter.notifyDataSetChanged();
+                                }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
+                                }
+                            });
+                        }
                         }
 
                         @Override

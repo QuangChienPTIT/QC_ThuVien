@@ -1,5 +1,7 @@
 package com.example.higo.thuvien.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +37,7 @@ public class FragmentSachDangKy extends Fragment {
     ArrayList<SachMuon> listSachMuon;
     SachMuonAdapter sachMuonAdapter;
     Bundle bundle;
+    private SachMuonDAO sachMuonDAO = new SachMuonDAO();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference rootSachMuon = FirebaseDatabase.getInstance().getReference().child("SachMuon");
 
@@ -52,24 +55,28 @@ public class FragmentSachDangKy extends Fragment {
         lvSachMuon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SachMuon sachMuon = listSachMuon.get(i);
-                new BookDAO().getBookByQuyenSach(sachMuon.getIdQuyenSach()).addValueEventListener(new ValueEventListener() {
+                final SachMuon sachMuon = listSachMuon.get(i);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Hủy đăng ký");
+                builder.setMessage("Bạn có muốn hủy đăng ký");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String idBook = null;
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                            idBook = dataSnapshot1.getKey();
-                        }
-                        Intent intent = new Intent(getContext(), ReviewActivity.class);
-                        intent.putExtra("idBook", idBook);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sachMuonDAO.huyDangKy(sachMuon.getId(),getContext());
+                        //Toast.makeText(getContext(), "Hủy đăng ký thành công", Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
 
                     }
                 });
+                builder.setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }
@@ -80,7 +87,7 @@ public class FragmentSachDangKy extends Fragment {
         sachMuonAdapter = new SachMuonAdapter(getActivity(), R.layout.item_listsachmuon, listSachMuon);
         lvSachMuon.setAdapter(sachMuonAdapter);
 
-        new SachMuonDAO().getListSachMuonByUser(user.getUid()).addValueEventListener(new ValueEventListener() {
+        sachMuonDAO.getListSachMuonByUser(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listSachMuon.clear();
@@ -88,7 +95,7 @@ public class FragmentSachDangKy extends Fragment {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     if (data.child("ngayMuon").getValue() == null) {
                         SachMuon sachMuon = data.getValue(SachMuon.class);
-                        sachMuon.setIdUser(sachMuon.getIdUser());
+                        sachMuon.setId(data.getKey());
                         listSachMuon.add(sachMuon);
                     }
                 }

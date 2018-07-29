@@ -1,10 +1,15 @@
 package com.example.higo.thuvien.DAO;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.higo.thuvien.Model.QuyenSach;
 import com.example.higo.thuvien.Model.SachMuon;
 import com.example.higo.thuvien.Model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -68,6 +73,23 @@ public class SachMuonDAO {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+    }
+
+    public void huyDangKy(String id, final Context context){
+        rootSachMuon.child(id).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, "Hủy đăng ký thành công", Toast.LENGTH_SHORT).show();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Hủy đăng ký thất bại", Toast.LENGTH_SHORT).show();
             }
         });
 

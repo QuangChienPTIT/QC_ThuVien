@@ -1,6 +1,8 @@
 package com.example.higo.thuvien.Fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,7 +53,6 @@ public class FragmentAccount extends Fragment {
     private RelativeLayout layoutLogout;
     private RelativeLayout layoutTaiKhoan;
     private RelativeLayout layoutSachYeuThich;
-    private RelativeLayout layoutTrenDaBinhLuan;
     private RelativeLayout layoutAbout;
     private RelativeLayout layoutThongTinTaiKhoan;
     private Uri mImageUri;
@@ -108,7 +109,6 @@ public class FragmentAccount extends Fragment {
         layoutSetting = view.findViewById(R.id.layoutSetting);
         layoutLogout = view.findViewById(R.id.layoutLogout);
         layoutSachYeuThich = view.findViewById(R.id.layoutSachYeuThich);
-        layoutTrenDaBinhLuan = view.findViewById(R.id.layoutTruyenDaBinhLuan);
         layoutThongTinTaiKhoan = view.findViewById(R.id.layoutThongTinTaiKhoan);
         mStorageRef = FirebaseStorage.getInstance().getReference("ImageUser");
 
@@ -160,6 +160,23 @@ public class FragmentAccount extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), ActivityYeuThich.class);
                 startActivity(intent);
+            }
+        });
+        layoutAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Hoàn thành");
+                builder.setMessage(R.string.about);
+                builder.setCancelable(false);
+                builder.setNegativeButton("Đã hiểu", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 

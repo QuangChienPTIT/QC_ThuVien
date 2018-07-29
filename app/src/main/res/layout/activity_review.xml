@@ -51,9 +51,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:textColor="@color/white"
-                        android:textSize="10dp"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:id="@+id/txtBookName"
@@ -165,7 +164,8 @@
                         android:layout_marginTop="-84dp"
                         android:layout_toStartOf="@+id/txtQuyenSach"
                         android:text="Xem đánh giá"
-                        android:textColor="@android:color/darker_gray" />
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="italic" />
 
                 </RelativeLayout>
             </LinearLayout>

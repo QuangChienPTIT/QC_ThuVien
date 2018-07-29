@@ -44,7 +44,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:hint="Username" />
+                    android:hint="Email"
+                    android:inputType="textEmailAddress" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -70,7 +71,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:hint="First Name" />
+                    android:hint="First Name"
+                    android:inputType="textCapWords" />
 
             </RelativeLayout>
 
@@ -97,7 +99,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:hint="LastName" />
+                    android:hint="LastName"
+                    android:inputType="textCapWords" />
 
             </RelativeLayout>
 
@@ -124,7 +127,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:hint="Tuổi" />
+                    android:hint="Tuổi"
+                    android:inputType="number" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -176,7 +180,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
-                    android:hint="Số Điện Thoại" />
+                    android:hint="Số Điện Thoại"
+                    android:inputType="phone" />
             </RelativeLayout>
 
             <LinearLayout
