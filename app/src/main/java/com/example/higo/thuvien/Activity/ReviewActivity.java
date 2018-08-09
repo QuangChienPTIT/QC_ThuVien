@@ -248,6 +248,7 @@ public class ReviewActivity extends AppCompatActivity {
         setTxtTacGia(idBook);
         setTxtSoLuong(idBook);
         setRatingBarReview(idBook);
+        kiemTraQuyenSachDangMuon(user.getUid(),idBook);
     }
 
     private void setRatingBarReview(String idBook) {
@@ -357,6 +358,7 @@ public class ReviewActivity extends AppCompatActivity {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else
+
                     demSoSachSachMuon();
             }
 
@@ -365,6 +367,56 @@ public class ReviewActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    private void kiemTraQuyenSachDangMuon(final String idUser, String idBook){
+        bookDAO.getQuyenSachByBook(idBook).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<QuyenSach> quyenSachs = new ArrayList<>();
+                for(DataSnapshot data:dataSnapshot.getChildren()){
+                    QuyenSach quyenSach = data.getValue(QuyenSach.class);
+                    quyenSach.setId(data.getKey());
+                    quyenSachs.add(quyenSach);
+                }
+                sachMuonDAO.getListSachDangMuon(idUser).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data:dataSnapshot.getChildren()){
+                            if(data.child("ngayTra").getValue()==null){
+                                Log.e("idQuyenSach",data.child("idQuyenSach").getValue().toString());
+                                if(kiemTraMangSachMuon(quyenSachs,data.child("idQuyenSach").getValue().toString())){
+                                    btnMuonSach.setEnabled(false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private boolean kiemTraMangSachMuon(List<QuyenSach> quyenSachs,String idQuyenSach){
+        for(int i = 0; i< quyenSachs.size();i++){
+            if(quyenSachs.get(i).getId().equals(idQuyenSach)){
+                return true;
+            }
+
+        }
+        return false;
     }
 
     private void demSoSachSachMuon() {
